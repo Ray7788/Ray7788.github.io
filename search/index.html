@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>Archives: 2023 - Ray</title>
+  <title>Search - Ray</title>
   
     <link rel="shortcut icon" href="/Ray7788/Ray7788.github.io/project/source/personal/rui.jpg">
   
@@ -16,11 +16,11 @@
   
   
   
-  <meta property="og:title" content="Archives: 2023 - Ray" />
+  <meta property="og:title" content="Search - Ray" />
   
   <meta property="og:type" content="website" />
   
-  <meta property="og:url" content="https://github.com/Ray7788/Ray7788.github.io/project/archives/2023/index.html" />
+  <meta property="og:url" content="https://github.com/Ray7788/Ray7788.github.io/project/search/index.html" />
   
   <meta property="og:image" content="/source/personal/rui.jpg" />
   
@@ -77,6 +77,10 @@
   
   
   
+<link rel="stylesheet" href="/Ray7788/Ray7788.github.io/project/css/search.css">
+
+  
+  
   
 
   
@@ -95,6 +99,8 @@
         data-toc="true"
         data-toc-max-depth="2"
         
+        
+        data-search-path="search.json"
         
     >
         <nav id="theme-nav">
@@ -131,42 +137,19 @@
         </div>
     </div>
 </nav>
-        <div class="container">
+        
+    <div class="container">
     <div class="meta">
-        <div class="type">
-            
-            
-        </div>
-
-        <h2 class="title">Archives</h2>
+        <h2 class="title">
+            Search
+        </h2>
     </div>
-
-    <div class="divider"></div>
-
-    <div class="post-list archives">
-        
-        <article class="post-list-item">
-            <a href="/Ray7788/Ray7788.github.io/project/2023/02/25/hello-world/">
-                
-                <div class="content">
-                    
-                    <div class="title">
-                        Hello World
-                    </div>
-                    
-                    <div class="time">
-                        <span>February</span>
-                        <span>&nbsp;25,&nbsp;</span>
-                        <span>2023</span>
-                    </div>
-                </div>
-            </a>
-        </article>
-        
-    </div>
-
-    
+    <form id="search-form">
+        <input type="text" id="searchbox" placeholder="Type to search...">
+    </form>
+    <div class="post-list archives" id="search-results"></div>
 </div>
+
         <footer>
     <div class="inner">
         <div class="links">
@@ -237,6 +220,10 @@
 
         
 <script src="/Ray7788/Ray7788.github.io/project/js/main.js"></script>
+
+        
+        
+<script src="/Ray7788/Ray7788.github.io/project/js/search.js"></script>
 
         
         
