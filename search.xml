@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>强化学习2:MDP Reinforcement Learning2 Markov Decision Process</title>
+      <link href="/2023/08/02/RL2-Markov/"/>
+      <url>/2023/08/02/RL2-Markov/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>本文基于 DeepMind research 领头人David Silver的<a href="https://www.deepmind.com/learning-resources/introduction-to-reinforcement-learning-with-david-silver">Intro to RL</a>教学视频和互联网上各大神的笔记统一整理，如有错误请斧正，谢谢！  </p><p>为了一步步引入MDP，我们将循序渐进地从马尔科夫性质（Markov Process），马尔科夫奖励过程（Markov Reward Process，MRP），再到马尔科夫决策过程（Markov Decision Processes,MDP）。最后再对MDP进行部分扩展，如有限与连续MDPs(Infinite and continuous MDPs)，部分观测MDP（Partially Observable MDPs，POMDP）以及无折扣或平均奖励MDPs(Undiscounted, average reward MDPs)。</p><h2 id="1-马尔科夫性质（Markov-Property）"><a href="#1-马尔科夫性质（Markov-Property）" class="headerlink" title="1. 马尔科夫性质（Markov Property）"></a>1. 马尔科夫性质（Markov Property）</h2><p>进一步了解马尔科夫决策过程之前，需要先了解马尔科夫性质(Markov Property)，马尔科夫性质即未来的状态只依赖于当前状态，与过去状态无关。<br>正式的定义如下：</p><blockquote><p>马尔科夫性质（Markov Property）定义：<br>在时间步 $t + 1$ 时，环境的反馈仅取决于上一时间步$t$的状态$s$和动作$a$，与时间步$t-1$以及$t-1$步之前的时间步都没有关联性$2x -5y &#x3D; 8$。</p></blockquote><p>马尔科夫性，也就是无后效性。根据定义，当前状态捕捉了历史中所有相关的信息，所以知道了状态，状态是未来的充分统计。<br>某阶段的状态一旦确定，则此后过程的演变不再受此前各状态及决策的影响。历史(history)就可以完全丢弃。也就是说，未来与过去无关。举个不恰当的例子hhh，小米8的外观设计和前代的小米6完全没有关系。。。</p><p>然而在实际的环境中，智能体所需完成的任务不能够完全满足马尔科夫性质，即在时间步$t+1$的反馈不一定仅仅依赖于时间步$t$的状态和动作。但是为了简化问题的求解过程，仍然假设该任务满足马尔科夫属性（Markov Property），并通过约束环境的状态使得问题满足马尔科夫属性。</p><h2 id="2-马尔科夫过程（Markov-Process）"><a href="#2-马尔科夫过程（Markov-Process）" class="headerlink" title="2. 马尔科夫过程（Markov Process）"></a>2. 马尔科夫过程（Markov Process）</h2><p>AKA Markov Chain. 是一个无记忆的随机过程，可有用元组&lt;S,P&gt;表示，其中S为有限数量的状态集，P为状态转移概率矩阵。</p><p>状态与状态之间的转换过程即为马尔科夫过程。虽然我们可能不知道P的具体值到底是什么，但是通常我们假设P是存在的（转移概率存在，如果是确定的，无非就是概率为1），而且是稳定的（意思是从状态A到其他状态的转移虽然符合某个分布，但是其转移到某个状态的概率是确定的，不随时间变化的）。</p><h2 id="3-状态转移矩阵-State-Transition-Matrix"><a href="#3-状态转移矩阵-State-Transition-Matrix" class="headerlink" title="3. 状态转移矩阵(State Transition Matrix)"></a>3. 状态转移矩阵(State Transition Matrix)</h2><p>对于马尔科夫状态$s$以及后续的状态$s’$,状态转移概率可以定义为： $$ \mathbb P_{ss’}&#x3D;\mathbb P[S_{s+1}&#x3D;s’| S_t&#x3D;s] $$ 状态转移矩阵是马尔科夫过程中状态之间转移的概率所组成的矩阵，因此大小是状态数n的平方。他反映了所有当前状态$s$以及后续的状态$s’$的映射，所以他的每行概率之和必定为1。 $$ \mathbb P&#x3D; \left|\begin{matrix}P_{11} &amp; …&amp;P_{1n}\. &amp; &amp;.\P_{n1} &amp;… &amp;P_{nn}\end{matrix}\right| $$</p><p>$$<br>\sqrt{x^2 + y^2}<br>$$</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> AI </tag>
+            
+            <tag> Reinforcement Learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>通过Minimax算法实现基础人机对抗博弈 (Minimax Algorithm)</title>
       <link href="/2023/07/07/Using-the-Minimax-Algorithm-to-implement-the-Basic-Human-Machine-Confrontation-Game/"/>
       <url>/2023/07/07/Using-the-Minimax-Algorithm-to-implement-the-Basic-Human-Machine-Confrontation-Game/</url>
