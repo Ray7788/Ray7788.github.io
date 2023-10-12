@@ -164,22 +164,22 @@
     <tr>
         <td>
             <center>
-                <img src="/img/Haskell01.png" width="60%" />
-                <br/>
+                <img src="/2023/06/25/Use-Haskell-solve-QuadTree-problems/Haskell01.png" width="60%">
+                <br>
                 <font color="AAAAAA">原图像</font>
             </center>
         </td>
         <td>
             <center>
-                <img src="/img/Haskell02.png" width="60%" />
-                <br/>
+                <img src="/2023/06/25/Use-Haskell-solve-QuadTree-problems/Haskell02.png" width="60%">
+                <br>
                 <font color="AAAAAA">右下角浪费</font>
             </center>
         </td>
         <td>
             <center>
-                <img src="/img/Haskell03.png" width="60%" />
-                <br/>
+                <img src="/2023/06/25/Use-Haskell-solve-QuadTree-problems/Haskell03.png" width="60%">
+                <br>
                 <font color="AAAAAA">左上角的四分格中也浪费</font>
             </center>
         </td>
@@ -204,7 +204,7 @@
 <p>一个逆时针函数，它采用四个四叉树并返回四叉树，其四个子树是给定输入，按逆时针顺序排列。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">anticlockwise :: QuadTree -&gt; QuadTree -&gt; QuadTree -&gt; QuadTree -&gt; QuadTree</span><br><span class="line">anticlockwise a b c d = Grid a d c b</span><br></pre></td></tr></table></figure>
 <p>顺时针排序是指在a b c d顺时针方向的四叉树中，子树b位于a顺时针移动到达的象限内，c位于b顺时针移动到达的象限内，d位于c顺时针移动到达的象限内，a位于从d顺时针移动到达的象限内。反之亦然。</p>
-<h2 id="重头戏"><a href="#重头戏" class="headerlink" title="重头戏"></a>重头戏</h2><p>接下来我们要进行图像处理，定义一个函数：reverse，它将四叉树作为输入并返回一个新的四叉树作为输出。 此函数不应该改变quadtree的结构，但应该改变里面表示黑白颜色的数据内容。<br>改变规则如下：<br><strong>当且仅当超过一半的邻边或部分边（这里统称为“邻居”）的单元颜色与此单元自身颜色不一致时，反转此单元的颜色（假设该单元格原先为黑色的话，现在变为白色）。</strong><br>例如，如果一个单元在输入q中是黑色的，那么它在输出模糊q中应该是白色的，当且仅当在q中它的邻居中白色的单元多于黑色的单元。<br>此处注意，宏观来看一个完整图像的边界处的单元通常具有较少的邻居。<br><img src="/img/Haskell04.png" alt="效果1"><br><img src="/img/Haskell05.png" alt="效果2"></p>
+<h2 id="重头戏"><a href="#重头戏" class="headerlink" title="重头戏"></a>重头戏</h2><p>接下来我们要进行图像处理，定义一个函数：reverse，它将四叉树作为输入并返回一个新的四叉树作为输出。 此函数不应该改变quadtree的结构，但应该改变里面表示黑白颜色的数据内容。<br>改变规则如下：<br><strong>当且仅当超过一半的邻边或部分边（这里统称为“邻居”）的单元颜色与此单元自身颜色不一致时，反转此单元的颜色（假设该单元格原先为黑色的话，现在变为白色）。</strong><br>例如，如果一个单元在输入q中是黑色的，那么它在输出模糊q中应该是白色的，当且仅当在q中它的邻居中白色的单元多于黑色的单元。<br>此处注意，宏观来看一个完整图像的边界处的单元通常具有较少的邻居。<br><img src="/2023/06/25/Use-Haskell-solve-QuadTree-problems/Haskell04.png" alt="效果1"><br><img src="/2023/06/25/Use-Haskell-solve-QuadTree-problems/Haskell05.png" alt="效果2"></p>
 <h1 id="以下思路从宏观到微观依次介绍，目的是为了增强思维连续性，便于读者理解"><a href="#以下思路从宏观到微观依次介绍，目的是为了增强思维连续性，便于读者理解" class="headerlink" title="以下思路从宏观到微观依次介绍，目的是为了增强思维连续性，便于读者理解"></a>以下思路从<strong>宏观</strong>到<strong>微观</strong>依次介绍，目的是为了增强思维连续性，便于读者理解</h1><h2 id="思路介绍："><a href="#思路介绍：" class="headerlink" title="思路介绍："></a>思路介绍：</h2><p>完成这个任务有几点要考虑：<br>1 必须确保图像中的每一个单元都遍历到，才能完全输出最终反转后的图像，不能有遗漏，进一步来讲需要知道哪些单元已经遍历过了，哪些还没到访过。<br>2 遍历的出发点选在哪？何时结束遍历？<br>3 遍历的路线是怎样的？</p>
 <p>出发点设在整个图像的中心，中心也就是整个图像长度、宽度的各二分之一处（也就是中点，一半的意思），这样就构成了一个坐标系，由此开始递归遍历。<br>以下是整个程序的start point：启动整个程序，该函数输入一个四叉树，输出处理后的二叉树</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- Original Engine of whole programme</span><br><span class="line">-- use reverseMini to implement the tree</span><br><span class="line">reverse :: QuadTree -&gt; QuadTree</span><br><span class="line">reverse fullTree = reverseMini fullTree (fullTree, fullSize) (fullSize / 2, fullSize / 2, fullSize)</span><br><span class="line">  where fullSize = getWholeSize fullTree</span><br></pre></td></tr></table></figure>
