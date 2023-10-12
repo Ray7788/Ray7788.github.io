@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>强化学习3：动态规划基础 Planning by Dynamic - Ray</title>
+  
+    <link rel="shortcut icon" href="/source/personal/rui.jpg">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="强化学习3：动态规划基础 Planning by Dynamic - Ray" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/2023/08/13/RL3-DP/index.html" />
+  
+  <meta property="og:image" content="/img/RL3_00.png" />
+  
+  <meta property="og:article:published_time" content="2023-08-13T17:35:38.000Z" />
+  
+  <meta property="og:article:author" content="Rui Xu" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Ray</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/Ray7788" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/Theory/">Theory</a>
+        
+        </div>
+        
+
+        
+
+        <h2 class="title">强化学习3：动态规划基础 Planning by Dynamic</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="动态规划基础介绍"><a href="#动态规划基础介绍" class="headerlink" title="动态规划基础介绍"></a>动态规划基础介绍</h1><p>动态规划常常适用于有重叠子问题和最优子结构性质的问题，动态规划方法所耗时间往往远少于朴素解法。</p>
+<blockquote>
+<ul>
+<li>大致上，若要解一个给定问题，我们需要将其分解为不同部分（即子问题），再根据子问题的解以得出原问题的解。Optimal solution can be decomposed into subproblems</li>
+<li>通常许多子问题非常相似，为此动态规划法试图仅仅解决每个子问题一次，从而减少计算量：一旦某个给定子问题的解已经算出，则将其记忆化存储，以便下次需要同一个子问题解之时直接查表。Subproblems recur many times; Solutions can be cached and reused</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>MDP问题分类</p>
+<ul>
+<li><p>预测(prediction)：给定MDP和策略，或者给定一个MRP，求出基于该策略的价值函数</p>
+<ul>
+<li>输入： MDP $&lt;S,A,P,R,\gamma&gt;$以及策略 $\pi$。或者MRP $&lt;S,P^{\pi},R^{\pi},\gamma&gt;$。</li>
+<li>输出：值函数 $v_{\pi}$。</li>
+</ul>
+</li>
+<li><p>控制(control)：给定一个MDP，求出最优价值函数和最优策略。</p>
+<ul>
+<li>输入： MDP $&lt;S,A,P,R,\gamma&gt;$</li>
+<li>输出：最优值函数$v_{<em>}$以及最优策略$\pi_{</em>}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p> 强化学习的核心思想是使用值函数$v(s)$或者动作值函数$q(s,a)$，找到更优的策略给智能体进行决策使用。由上一篇文章的内容可知，当找到最优的状态值函数$v(s)$或者最优的动作值函数$q(s,a)$，就可以找到最优策略$\pi$，公式如下: $$ \begin{aligned} v(s)&amp; &#x3D;\max_{a \in A} \mathbb [R_{t+1}+\gamma v_{\pi}(S_{t+1}) | S_t&#x3D;s,A_t&#x3D;a] \ &amp;&#x3D;\max_{a \in A} \sum _{a \in A}p(s’,r| s,a)[r+\gamma v^(s’)] \end{aligned} $$</p>
+<p>$$ \begin{aligned} q(S,A)&amp; &#x3D;\mathbb E(R_{t+1}+\gamma \max_{a’} q^(S_{t+1},a’) | S_t&#x3D;s,A_t&#x3D;a) \ &amp;&#x3D;\sum {s’,a}p(s’,r|s,a)[r+\gamma \max{a’}q^*(s’,a’)] \end{aligned} $$</p>
+<p>其中状态$s \in S$、动作$a \in A$、新的状态$s’ \in S^+$。上面两式中：最优价值为环境中的每一个状态$s$和动作$a$对应的动作转换概率$p(s’,r|s,a)$乘以未来折扣奖励中最大的价值$[r+\gamma \max_{a’}value(s’,a’)]$。其中$value(s’,a’)$为价值函数，可以为$v^(s’)$或者为$q^(s’,a’)$。</p>
+<p>动态规划法主要是将上式中的贝尔曼方程转换为赋值操作，通过更新价值来模拟价值更新函数。</p>
+<h1 id="迭代策略评估-Iterative-Policy-Evaluation"><a href="#迭代策略评估-Iterative-Policy-Evaluation" class="headerlink" title="迭代策略评估(Iterative Policy Evaluation)"></a>迭代策略评估(Iterative Policy Evaluation)</h1><h2 id="目标：predict——求出价值函数"><a href="#目标：predict——求出价值函数" class="headerlink" title="目标：predict——求出价值函数"></a>目标：predict——求出价值函数</h2><p> 评估一个给定策略$\pi$，求对应的值函数$v_{\pi}(s)$或者$q_{\pi}(s,a)$，即解决预测（Prediction）问题。</p>
+<ul>
+<li>同步迭代：反向迭代，在每次迭代过程中，<ul>
+<li>在第k+1次迭代，</li>
+<li>对每一个状态s属于S，</li>
+<li>所有的状态s的价值用$v_k(s’)$ 来计算，并且更新$v_{k+1}(s’)$的值。</li>
+<li>其中s’为s的后继。</li>
+</ul>
+</li>
+</ul>
+<p>该方法最终能收敛到该MDP下对应策略的value function</p>
+<ul>
+<li>异步迭代：在第k次迭代使用档次迭代的状态价值来更新状态价值</li>
+</ul>
+<p>改善：在每一次迭代之后，马上根据迭代得到的价值函数贪婪地更新我们的策略。虽然不一定一次就能得到最好的策略，但是最终能够收敛到最佳策略。</p>
+<h2 id="Grid-World-评估在这个方格世界里给定的策略。即求解该方格世界在给定策略下的（状态）价值函数，也就是求解在给定策略下，该方格世界里每一个状态的价值。-策略迭代（Policy-Iteration）目标：control——求出最优策略"><a href="#Grid-World-评估在这个方格世界里给定的策略。即求解该方格世界在给定策略下的（状态）价值函数，也就是求解在给定策略下，该方格世界里每一个状态的价值。-策略迭代（Policy-Iteration）目标：control——求出最优策略" class="headerlink" title="Grid World:评估在这个方格世界里给定的策略。即求解该方格世界在给定策略下的（状态）价值函数，也就是求解在给定策略下，该方格世界里每一个状态的价值。# 策略迭代（Policy Iteration）目标：control——求出最优策略"></a><strong>Grid World:</strong><br>评估在这个方格世界里给定的策略。即求解该方格世界在给定策略下的（状态）价值函数，也就是求解在给定策略下，该方格世界里每一个状态的价值。<br># 策略迭代（Policy Iteration）<br>目标：control——求出最优策略</h2><p>当前策略上迭代计算价值函数，再根据价值函数贪婪地更新策略。如此反复多次，最终得到最优策略和最优状态价值函数。（贪婪指总是采取使得状态价值最大的行为；其实不一定每次都要更新策略，也可以等迭代到一定次数之后再更新，不过这样可能会影响收敛速度）</p>
+<p>改善：不一定每次都要把最优价值函数迭代出来，最优策略会更早的迭代出来。所以可以设置一个$\epsilon$来比较两次迭代的价值函数平方差，或者设置最大迭代次数，或者每次迭代更新策略。</p>
+<p><strong>分为以下2个步骤</strong></p>
+<ul>
+<li>策略评估（Policy evaluation）：根据策略$\pi$迭代式地计算值函数$v_{\pi}$。</li>
+<li>策略改进（Policy improvement）：使用贪婪策略不断提升策略，使得$\pi’ \ge \pi$。</li>
+</ul>
+<p>细节描述：</p>
+<pre><code>a、我们随机初始化一个值$V$以及策略$\pi$
+
+b、通过策略评估求得当前策略下的值函数$V=V^&#123;\pi&#125;$
+
+c、使用贪婪策略提升策略，$\pi=greedy(v_&#123;\pi&#125;)$
+
+d、基于新的策略$\pi$计算值函数$V=V^&#123;\pi&#125;$，使得$V$函数与新策略一致
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/3e2a6c6a7e494abf85c892ab33cde159.webp#pic_center" alt="策略迭代"></p>
+<p>如果评价过程和提升过程都稳定下来，即不再发生变化，那么值函数和策略必须都是最优的。这意味着贝尔曼最优方程成立。 $$ \begin{aligned} v_{}(s)&amp; &#x3D;\max_{a} \mathbb E[R_{t+1} +\gamma v_(S_{t+1}|S_t&#x3D;s,A_t&#x3D;a)]\ &amp;&#x3D;\max_{a} \sum_{s’,r}p(s’,r|s,a)[r+\gamma v^*(s’)] \end{aligned} $$ 还可以用两个目标来考虑GPI中评价和提升过程的相互作用，如上图所示，上面的线代代表目标  v &#x3D; v π ，下面的线代表目标$\pi&#x3D;greedy(V)$。目标会发生相互作用，因为两条线不是平行的。</p>
+<p>从一个策略$\pi$ 和一个价值函数$v$开始，每一次箭头向上代表着利用当前策略进行值函数的更新，每一次箭头向下代表着根据更新的值函数贪婪地选择新的策略，说它是贪婪的，是因为每次都采取转移到可能的、状态函数最高的新状态的行为。最终将收敛至最优策略和最优值函数。</p>
+<p><strong>Jack’s Car Rental</strong></p>
+<p>1号租车点有10辆车”收益分析：</p>
+<p>考虑状态“1号租车点有10辆车”的未来可能获得收益，需要分析在保有10辆车的情况下的租车（Rent）与回收（Return）的行为。计算该状态收益的过程实际上是，另外一个动作策略符合泊松分布的马尔可夫决策过程。</p>
+<p>将1天内可能发生的Rent与Return行为记录为[#Rent, #Return]，其中“#Rent”表示一天内租出的车辆数，“#Return”表示一天内回收的车辆数，设定这两个指标皆不能超过20。</p>
+<p>假设早上，1号租车点里有10辆车，那么在傍晚清点的时候，可能保有的车辆数为0~20辆。如果傍晚关门歇业时还剩0辆车，那么这一天的租收行为$A_{rent,return}$可以是： $$ A_{rent,return}&#x3D; \begin{bmatrix} 10 &amp; 0 \ , 11 &amp; 1, \ 12 &amp; 2, \ … &amp; … \ 20 &amp; 10 \end{bmatrix} $$ Rent与Return是相互独立的事件且皆服从泊松分布，所以要计算某个行为出现的概率直接将$P(A_{rent})$与$P(A_{return})$相乘。</p>
+<p>但这里要计算的是条件概率，即为$P(A_{rent,return}|S’’&#x3D;0)$，所以还需要再与傍晚清点时还剩0辆车的概率$P(S’’&#x3D;0)$相除。</p>
+<p>各个租收行为所获得的收益是以租出去的车辆数为准，所以当傍晚还剩0辆车时，这一天的收益期望可以写为： $$ R(S’&#x3D;10|S’’&#x3D;0)&#x3D;10 \begin{bmatrix} \frac{P(A_{rent}&#x3D;10)P(A_{return}&#x3D;0)}{P(S’’&#x3D;0)} \ \frac{P(A_{rent}&#x3D;11)P(A_{return}&#x3D;1)}{P(S’’&#x3D;0)} \ …\ \frac{P(A_{rent}&#x3D;20)P(A_{return}&#x3D;10)}{P(S’’&#x3D;0)} \end{bmatrix}^T \begin{bmatrix} 10 \ 11 \ …\ 20 \end{bmatrix} $$ 其中，$P(S’’&#x3D;0)$也可以写为： $$ P(S’’&#x3D;0)&#x3D;\sum P(A_{rent})P(A_{return}) $$ 在计算出矩阵$R(S’&#x3D;10|S’’&#x3D;0,1,2,…20)$后，再进行加权平均，即可得到状态“1号租车点有10辆车”的奖励期望$R(S’&#x3D;10)$: $$ R(S’&#x3D;10)&#x3D;P(S’’&#x3D;0,1,2,…20)R^T(S’&#x3D;10| S’’&#x3D;0,1,2,…,20) $$ 两个租车点，所有的状态按上述方法计算后，即可得出两个租车点的奖励矩阵$|R_1(S’),R_2(S’)|$。</p>
+<h2 id="在计算出奖励矩阵后，这个问题就变成了bandit问题的变种，bandit问题是一个动作固定对应一个未来的状态，而这里虽然也是这样，不过所对应的状态却要以当前状态为基础进行计算得出，还是有些不同，所以称为bandit问题的一个变种。-价值迭代-Value-Iteration-目标：control——求出最优策略"><a href="#在计算出奖励矩阵后，这个问题就变成了bandit问题的变种，bandit问题是一个动作固定对应一个未来的状态，而这里虽然也是这样，不过所对应的状态却要以当前状态为基础进行计算得出，还是有些不同，所以称为bandit问题的一个变种。-价值迭代-Value-Iteration-目标：control——求出最优策略" class="headerlink" title="在计算出奖励矩阵后，这个问题就变成了bandit问题的变种，bandit问题是一个动作固定对应一个未来的状态，而这里虽然也是这样，不过所对应的状态却要以当前状态为基础进行计算得出，还是有些不同，所以称为bandit问题的一个变种。# 价值迭代(Value Iteration)目标：control——求出最优策略"></a>在计算出奖励矩阵后，这个问题就变成了bandit问题的变种，bandit问题是一个动作固定对应一个未来的状态，而这里虽然也是这样，不过所对应的状态却要以当前状态为基础进行计算得出，还是有些不同，所以称为bandit问题的一个变种。<br># 价值迭代(Value Iteration)<br>目标：control——求出最优策略</h2><p>一个最优策略可以分解为两部分</p>
+<ol>
+<li>从状态s到下一个状态s’时采取了最优行为A</li>
+<li>在s’时遵循最优策略。所以有以下定理：一个策略能够使得状态s获得最优价值，当且仅当：对于从状态s可以到达的任何状态s’，该策略能够使得状态s’的价值是最优价值。</li>
+</ol>
+<p>Value Iteration：从初始状态价值开始同步迭代计算，最终收敛，整个过程中没有遵循任何策略。根据每一个状态的最优后续状态价值来更新该状态的最佳状态价值。在value iteration时候，算法不会给出明确的策略，迭代过程期间得到的价值函数，不对应任何策略。</p>
+<h2 id="5、策略评估（Policy-Evaluation）、策略迭代-Policy-Iteration-以及值迭代-Value-Iteration-总结"><a href="#5、策略评估（Policy-Evaluation）、策略迭代-Policy-Iteration-以及值迭代-Value-Iteration-总结" class="headerlink" title="5、策略评估（Policy Evaluation）、策略迭代(Policy Iteration)以及值迭代(Value Iteration)总结"></a>5、策略评估（Policy Evaluation）、策略迭代(Policy Iteration)以及值迭代(Value Iteration)总结</h2><p>这三个算法通过一张表可以总结如下：</p>
+<table>
+<thead>
+<tr>
+<th>问题（Problem）</th>
+<th>应用的贝尔曼方程 （Bellman Equation）</th>
+<th>使用到的算法（Algorithm）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预测(Prediction）</td>
+<td>贝尔曼期望方程（Bellman Expectation Equation）</td>
+<td>迭代式策略评估（Iterative Policy Evaluation）</td>
+</tr>
+<tr>
+<td>控制（Control）</td>
+<td>贝尔曼期望方程（Bellman Expectation Equation）+ 贪婪策略改进（Greedy Policy Improvement）</td>
+<td>策略迭代(Policy Iteration)</td>
+</tr>
+<tr>
+<td>控制（Control）</td>
+<td>贝尔曼最优方程（Bellman Optimality Equation）</td>
+<td>值迭代(Value Iteration)</td>
+</tr>
+</tbody></table>
+<ul>
+<li>策略评估（Policy Evaluation）、策略迭代(Policy Iteration)以及值迭代(Value Iteration)这三个算法都是基于状态值函数$v_{\pi}(s)$或者$v_{*}(s)$</li>
+<li>如果动作数量为$m$，状态数量为$n$，那么每次迭代的计算复杂度为$O(mn^2)$。</li>
+<li>这三个算法也同样可以应用到动作值函数$q_{\pi}(s,a)$或者$q_{*}(s,a)$，同时每次迭代的计算复杂度为$O(m^2n^2)$。</li>
+</ul>
+
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by Rui Xu, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/AI/" class="tag">#AI</a><a href="/tags/Reinforcement-Learning/" class="tag">#Reinforcement Learning</a>
+        </p>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        
+        <a href="/2023/10/12/RL2-5-Bellman/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">强化学习2-5:MDP Reinforcement Learning2 Bellman</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/2023/08/04/RL2-Markov/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">强化学习2:MDP Reinforcement Learning2 Markov Decision Process</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/Ray7788" class="item">GitHub</a>
+                
+                <a href="ray778@foxmail.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2023 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        <br>
+        <span class="footer-extra-description">永远相信美好的事情即将发生。Always believe something great is going to happen.</span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
