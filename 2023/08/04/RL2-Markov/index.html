@@ -188,7 +188,7 @@
     </tr>
 </table> -->
 <!--  -->
-<p><img src="./img/RL2_01.webp" alt=""></p>
+<p><img src="/img/RL2_01.webp" alt=""></p>
 <p>上图中，圆圈表示学生所处的状态，方格Sleep是一个终止状态，终止状态也可以理解成以100%的概率转移到自己，所以一旦进入，就停留在此。箭头表示状态之间的转移，箭头上的数字表示状态转移概率。</p>
 <p>例如，当学生处在第一节课（Class1）时，有50%的概率会上第2节课（Class2）；同时也有50%的概率不认真听课，进入到刷facebook这个状态中。在刷facebook这个状态时，比较容易沉迷，有90%的概率在下一时刻继续浏览，有10%的概率返回到第一节课。当学生进入到第二节课（Class2）时，会有80%的概率继续参加第三节课（Class3），有20%的概率觉得课程较难而被迫下课（Sleep）。当学生处于第三节课这个状态时，有60%的概率通过考试，继而100%的结课，也有40%的概率去泡吧。泡吧之后，又分别有20%、40%、40%的概率返回值第一、二、三节课重新继续学习。</p>
 <p>假设学生马尔科夫链从状态Class1开始，最终结束于Sleep。其间的过程根据状态转化图可以有很多种可能性，这些都称为采样片段Sample Episodes。以下四个Episodes都是可能的：</p>
@@ -220,7 +220,7 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
     </tr>
 </table> -->
 <!-- ![Transition Matrix](./RL2-Markov/RL2-Matrix.png) -->
-<p><img src="./img/RL2-Matrix.png" alt=""></p>
+<p><img src="/img/RL2-Matrix.png" alt=""></p>
 <h1 id="4-马尔科夫奖励过程-Markov-Reward-Process"><a href="#4-马尔科夫奖励过程-Markov-Reward-Process" class="headerlink" title="4.马尔科夫奖励过程(Markov Reward Process)"></a>4.马尔科夫奖励过程(Markov Reward Process)</h1><p>原本的马尔科夫过程加上奖励值R之后就变成了马尔科夫奖励过程，元素由$<S,P>$变为$<S,P,R,\gamma>$。其中R就是奖励，$\gamma$ 是折扣因子。</p>
 <blockquote>
 <p>马尔科夫奖励过程(Markov Reward Process)定义：</p>
@@ -235,7 +235,7 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
 <p>为了找到长期累积奖励，不仅要考虑当前时间步t的奖励，还需要考虑到未来的奖励。总奖励（Total Reward）$R$的计算公式如下：</p>
 <script type="math/tex; mode=display">R=r_1+r_2+r_3...+r_n</script><p>根据总奖励R的计算公式可知，长期累积奖励从当前时间步$t$开始，直到最终状态的奖励$r_n$，得到未来累积奖励(Future Cumulative Reward)$R_t$。</p>
 <script type="math/tex; mode=display">R=r_{t+1}+r_{t+2}...+r_n</script><!-- ![hi](./RL2-Markov/RL2-rewards.png) -->
-<p><img src="./img/RL2-rewards2.png" alt=""></p>
+<p><img src="/img/RL2-rewards2" alt=""><br><!-- <img src="../img/RL2-rewards.png"> --></p>
 <p>一般而言，环境是随机的或者未知的，这意味着下一个状态可能也是随机的。即由于所处的环境是随机的，所以无法确定下一次执行相同的动作，以及是否能够获得相同的奖励。向未来探索得越多，可能产生的分歧(不确定性)就越多。因此，在实际任务中，通常用折扣未来累积奖励（Discounted Future Cumulative Reward）$G_t$来代替未来累积奖励。</p>
 <script type="math/tex; mode=display">G_t=R_{t+1}+\gamma R_{t+2}+...+\gamma^{n}R_n</script><p>如果考虑到无限时间的场景，更加通用的表示为（当前获得的奖励表示为$R_{t+1}$）：</p>
 <script type="math/tex; mode=display">G_t=R_{t+1}+\gamma R_{t+2}+...=\sum_{k=0}^{\infty}\gamma ^k R_{t+k+1}</script><p>其中$\gamma$为折扣因子（Discount Factor），是介于$[0,1]$的常数。对于距离当前时间步越远的奖励，其重要性就越低。</p>
@@ -256,7 +256,7 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
 <h2 id="4-3-价值函数-Value-Function"><a href="#4-3-价值函数-Value-Function" class="headerlink" title="4.3. 价值函数(Value Function)"></a>4.3. 价值函数(Value Function)</h2><p>价值函数是状态$s$的长期价值表示。它是上面说的回报的期望。</p>
 <script type="math/tex; mode=display">v(s)= \mathbb E[G_t|S_t=s]</script><p>在概率论和统计学中，数学期望是试验中每次可能的结果的概率乘以结果值得总和。这里回报的期望，即价值函数会会随着折扣因子的变化而取不同的值，因为回报会因为$\gamma$的值而改变，期望自然也就会改变。</p>
 <!-- ![hh](./RL2-Markov/RL2-rewards2.png) -->
-<p><img src="./img/RL2-rewards2.png" alt=""></p>
+<p><img src="/img/RL2-rewards2.png" alt=""></p>
 <p>上图是$\gamma$为0.9时，例子中的马尔科夫奖励过程，红色的就是状态的价值。暂时可以不必纠结上面的价值是怎么算出来的。</p>
 <p>通过价值函数的公式我们可以知道,要想求解一个状态的状态价值， 需要根据马尔科夫链把所有的可能列出来。每个可能都在终点终止，但是上面这个马尔科夫过程其实是有环的， 可能陷入无限循环的局面。</p>
 <p>因为折扣因子还是1，所以会导致回报G无限大，期望也就无限大，状态价值V也就无限大。下一章节引入贝尔曼方程就是为了更好的求解价值函数的。</p>
