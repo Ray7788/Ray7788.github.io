@@ -246,9 +246,8 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
 </ul>
 <h2 id="4-2-回报（Return）与折扣因子-gamma"><a href="#4-2-回报（Return）与折扣因子-gamma" class="headerlink" title="4.2 回报（Return）与折扣因子$\gamma$"></a>4.2 回报（Return）与折扣因子$\gamma$</h2><p>大多数的马尔科夫奖励过程（MRP）与马尔科夫决策过程（MDP）都会使用折扣因子$\gamma$。主要基于如下几点考虑：</p>
 <ul>
-<li>数学上计算的便利性</li>
-<li>避免未来进入循环马尔科夫过程带来的无限大回报</li>
-<li>未来的不确定性</li>
+<li>数学上计算的便利性。在带环的马尔可夫过程中，可以避免陷入无限循环来的无限大回报，达到收敛。</li>
+<li>随着时间的推移，，未来的不确定性越来越大</li>
 <li>类比经济学中，眼前的利益比未来的利益更加有意义</li>
 <li>人类的行为也更加倾向于眼前利益</li>
 <li>退一步来说，令$\gamma$为1，也可以简单的转化成没有折扣因子的状态</li>
@@ -257,10 +256,11 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
 <script type="math/tex; mode=display">v(s)= \mathbb E[G_t|S_t=s]</script><p>在概率论和统计学中，数学期望是试验中每次可能的结果的概率乘以结果值得总和。这里回报的期望，即价值函数会会随着折扣因子的变化而取不同的值，因为回报会因为$\gamma$的值而改变，期望自然也就会改变。</p>
 <!-- ![hh](./RL2-Markov/RL2-rewards2.png) -->
 <p><img src="/img/RL2-rewards2.png" alt=""></p>
-<p>上图是$\gamma$为0.9时，例子中的马尔科夫奖励过程，红色的就是状态的价值。暂时可以不必纠结上面的价值是怎么算出来的。</p>
+<p>上图是$\gamma$为0.9时，例子中的马尔科夫奖励过程，红色的就是状态的价值。</p>
+<p><img src="/img/RL2-valueFunction.png" alt=""><br><img src="/img/RL2-valueFunction2.png" alt=""></p>
 <p>通过价值函数的公式我们可以知道,要想求解一个状态的状态价值， 需要根据马尔科夫链把所有的可能列出来。每个可能都在终点终止，但是上面这个马尔科夫过程其实是有环的， 可能陷入无限循环的局面。</p>
 <p>因为折扣因子还是1，所以会导致回报G无限大，期望也就无限大，状态价值V也就无限大。下一章节引入贝尔曼方程就是为了更好的求解价值函数的。</p>
-
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//initialization</span><br><span class="line">V_fb = 0;</span><br><span class="line">V_pub =0;</span><br><span class="line">V_c1 = 0;</span><br><span class="line">V_c2 = 0;</span><br><span class="line">V_c3 = 0;</span><br><span class="line">V_pass = 0;</span><br><span class="line">V_slp = 0;</span><br><span class="line">gamma =0.9;</span><br><span class="line"></span><br><span class="line">//Iteratively computing Value function</span><br><span class="line">for n in  range(1,30):</span><br><span class="line">    V_fb_next  = 0.9*(-1+gamma*V_fb) + 0.1*(-1+gamma*V_c1)</span><br><span class="line">    V_pub_next = 0.2*(1+gamma*V_c1) + 0.4*(1+gamma*V_c2)+0.4*(1+gamma*V_c3)</span><br><span class="line">    V_c1_next  = 0.5*(-2+gamma*V_c2) + 0.5*(-2+gamma*V_fb)</span><br><span class="line">    V_c2_next  = 0.2*(-2+gamma*V_slp) + 0.8*(-2+gamma*V_c3)</span><br><span class="line">    V_c3_next  = 0.6*(-2+gamma*V_pass) + 0.4*(-2+gamma*V_pub)</span><br><span class="line">    v_pass_next = 1*(10 + 0.9*V_slp)</span><br><span class="line"></span><br><span class="line">    V_fb = V_fb_next;</span><br><span class="line">    V_pub = V_pub_next;</span><br><span class="line">    V_c1 = V_c1_next;</span><br><span class="line">    V_c2 = V_c2_next;</span><br><span class="line">    V_c3 = V_c3_next;</span><br><span class="line">    v_pass =v_pass_next</span><br><span class="line"></span><br><span class="line">print(&quot;fb = &quot;,V_fb);</span><br><span class="line">print(&quot;pub=&quot;,V_pub);</span><br><span class="line">print(&quot;V_c1 =&quot;,V_c1)</span><br><span class="line">print(&quot;V_c2 =&quot;,V_c2)</span><br><span class="line">print(&quot;V_c3 =&quot;,V_c3)</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -281,11 +281,11 @@ P_{n1}^a &amp; P_{n2}^a &amp; \cdots &amp; P_{nn}^a \\
 
     <div class="container post-prev-next">
         
-        <a href="/2023/10/12/RL2-5-Bellman/" class="next">
+        <a href="/2023/08/13/RL3-DP/" class="next">
             <div>
                 <div class="text">
                     <p class="label">Next</p>
-                    <h3 class="title">强化学习2-5:MDP Reinforcement Learning Bellman</h3>
+                    <h3 class="title">强化学习3：动态规划基础 Planning by Dynamic</h3>
                 </div>
             </div>
         </a>
