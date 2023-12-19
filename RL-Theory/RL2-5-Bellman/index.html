@@ -154,57 +154,62 @@
     <div class="divider"></div>
 
     <div class="content">
-        <h1 id="4-4-马尔科夫奖励过程的贝尔曼方程（Bellman-Equation）"><a href="#4-4-马尔科夫奖励过程的贝尔曼方程（Bellman-Equation）" class="headerlink" title="4.4 马尔科夫奖励过程的贝尔曼方程（Bellman Equation）"></a>4.4 马尔科夫奖励过程的贝尔曼方程（Bellman Equation）</h1><p>贝尔曼方程(Bellman Equation)可以用来方便的表示和计算马尔科夫奖励过程，价值函数可以分为两个部分;</p>
+        <h1 id="4-4-马尔科夫奖励过程-MRP-的贝尔曼方程（Bellman-Equation）"><a href="#4-4-马尔科夫奖励过程-MRP-的贝尔曼方程（Bellman-Equation）" class="headerlink" title="4.4 马尔科夫奖励过程(MRP)的贝尔曼方程（Bellman Equation）"></a>4.4 马尔科夫奖励过程(MRP)的贝尔曼方程（Bellman Equation）</h1><p>贝尔曼方程(Bellman Equation)可以用来方便的表示和计算马尔科夫奖励过程，价值函数可以分为两个部分;</p>
 <ul>
 <li>即时奖励$R_{t+1}$</li>
-<li>下一状态的折扣状态价值$\gamma v(S_{t+1})$</li>
+<li>下一状态的折扣状态价值$\gamma$ $v(S_{t+1})$</li>
 </ul>
-<p>MRP的贝尔曼方程可以进行如下简单的推导： </p>
-<script type="math/tex; mode=display">\begin{aligned} v(s) & =\mathbb E[G_t|S_t=s]{} \\ &=\mathbb E[R_{t+1}+\gamma R_{t+2} + \gamma ^2R_{t+3}+ ...|S_t=s] \\ &=\mathbb E[R_{t+1}+\gamma (R_{t+2} + \gamma R_{t+3}+ ...)|S_t=s] \\ &=\mathbb E[R_{t+1}+\gamma G_{t+1}|S_t=s] \\ &=\mathbb E[R_{t+1}+\gamma v(S_{t+1})|S_t=s] \\ \end{aligned}</script><p>贝尔曼方程的推导过程中只是简单得使用了累积回报$G<em>t$，以及状态价值函数$v</em>(s)$的基本定义。</p>
-<p>最后即可得出当前状态价值函数$v<em>s$的值为，在当前状态$s$下，即时奖励 $R</em>{t+1}$ 与下一状态的折扣状态价值$\gamma (S_{t+1})$的期望之和。</p>
+<p>MRP的贝尔曼方程可以进行如下简单的推导：<br>$$ \begin{aligned} v(s) &amp; &#x3D;\mathbb E[G_t|S_t&#x3D;s]{} \ &amp;&#x3D;\mathbb E[R_{t+1}+\gamma R_{t+2} + \gamma ^2R_{t+3}+ …|S_t&#x3D;s] \ &amp;&#x3D;\mathbb E[R_{t+1}+\gamma (R_{t+2} + \gamma R_{t+3}+ …)|S_t&#x3D;s] \ &amp;&#x3D;\mathbb E[R_{t+1}+\gamma G_{t+1}|S_t&#x3D;s] \ &amp;&#x3D;\mathbb E[R_{t+1}+\gamma v(S_{t+1})|S_t&#x3D;s] \ \end{aligned} $$ </p>
+<p>贝尔曼方程的推导过程中只是简单得使用了累积回报$G_t$，以及状态价值函数$v_(s)$的基本定义。</p>
+<p>最后即可得出当前状态价值函数$v_s$的值为，在当前状态$s$下，即时奖励 $R_{t+1}$ 与下一状态的折扣状态价值$\gamma (S_{t+1})$的期望之和。</p>
 <p>其核心即阻碍与表示当前状态价值函数$v(s)$与下一刻状态价值函数$v(s_{t+1})$之间的递归关系。 </p>
-<h1 id="5-马尔科夫决策过程-Markov-Decision-Process"><a href="#5-马尔科夫决策过程-Markov-Decision-Process" class="headerlink" title="5 马尔科夫决策过程(Markov Decision Process)"></a>5 马尔科夫决策过程(Markov Decision Process)</h1><h2 id="5-1-定义"><a href="#5-1-定义" class="headerlink" title="5.1 定义"></a>5.1 定义</h2><p>到目前为止其实我们都没有讲到强化学习，因为我们虽然对原始的马尔科夫过程（Markov Process,MP）引入了奖励<br>而引入马尔科夫奖励过程（Markov Reward Process，MRP），可是我们并没有决策的部分，强化学习本身是一个决策的问题。所以现在我们再引入一个因子，就是动作（Action）。从而将MRP问题变成了.马尔科夫决策过程（Markov Decision Processes,MDP）。此时才能算得上是强化学习。MDP是一个环境，里面的每个状态都满足马尔科夫性质（Markov Property）。</p>
+<h1 id="5-马尔科夫决策过程-Markov-Decision-Process"><a href="#5-马尔科夫决策过程-Markov-Decision-Process" class="headerlink" title="5 马尔科夫决策过程(Markov Decision Process)"></a>5 马尔科夫决策过程(Markov Decision Process)</h1><h2 id="5-1-定义"><a href="#5-1-定义" class="headerlink" title="5.1 定义"></a>5.1 定义</h2><p>到目前为止我们虽然对原始的马尔科夫过程（Markov Process,MP）通过而引入马尔科夫奖励过程（Markov Reward Process，MRP）而引入了奖励，可是我们并没有决策的部分，强化学习本身是一个决策的问题。所以现在我们再引入一个因子，就是动作（Action）。从而将MRP问题变成了.马尔科夫决策过程（Markov Decision Processes,MDP）。此时才能算得上是强化学习。MDP是一个环境，里面的每个状态都满足马尔科夫性质（Markov Property）。</p>
 <blockquote>
 <p>马尔科夫决策过程(Markov DecisionProcess)定义：</p>
-<p>一个马尔科夫决策过程(Markov DecisionProcess)，由一个五元组构成：$<S,A,P,R,\gamma>$</p>
+<p>一个马尔科夫决策过程(Markov DecisionProcess)，由一个五元组构成：$&lt;S,A,P,R,\gamma&gt;$</p>
+</blockquote>
+<blockquote>
 <ul>
-<li>S为有限的状态空间集，$s_i$表示时间步$i$的状态，其中$S={s_1,s_2,…s_n}$</li>
-<li>A为动作空间集，$a_i$表示时间步$t$的动作，其中$A={a_1,a_2,…,a_n}$</li>
-<li>$P$为状态转移矩阵，表示在当前状态$s$下执行动作$a$后，转移到另一个状态$s’$的概率分布，可以记为 $\mathbb P<em>{ss’}^a=\mathbb P[S</em>{s+1}=s’| S_t=s,A_t=a]$</li>
-<li>R为奖励函数，表示在状态$s$下执行动作$a$后转移到另一个状态$s’$获得的奖励，  $R<em>s^a=\mathbb E[R</em>{t+1}|S_t=s,A_t=a]$</li>
+<li>S为有限的状态空间集，$s_i$表示时间步$i$的状态，其中$S&#x3D;{s_1,s_2,…s_n}$</li>
+<li>A为动作空间集，$a_i$表示时间步$t$的动作，其中$A&#x3D;{a_1,a_2,…,a_n}$</li>
+<li>$P$为状态转移矩阵，表示在当前状态$s$下执行动作$a$后，转移到另一个状态$s’$的概率分布，可以记为 $\mathbb P_{ss’}^a&#x3D;\mathbb P[S_{s+1}&#x3D;s’| S_t&#x3D;s,A_t&#x3D;a]$</li>
+<li>R为奖励函数，表示在状态$s$下执行动作$a$后转移到另一个状态$s’$获得的奖励，  $R_s^a&#x3D;\mathbb E[R_{t+1}|S_t&#x3D;s,A_t&#x3D;a]$</li>
 <li>$\gamma$为折扣因子，$\gamma \in [0,1]$</li>
 </ul>
 </blockquote>
 <p>这里需要注意的是，因为有了动作的加入，奖励不再只和状态相关，还和动作有关。之前的奖励是离开状态就获取的即时奖励，现在是在某个状态下采取特定动作后获取的即时奖励.</p>
 <h2 id="5-1-策略（Policy）"><a href="#5-1-策略（Policy）" class="headerlink" title="5.1 策略（Policy）"></a>5.1 策略（Policy）</h2><p>策略是状态到动作的映射，在某个状态下采取什么样的动作，可以是确定的策略，也可以是一个随机策略(概率事件),一般用$\pi$表示。其定义如下：</p>
-<script type="math/tex; mode=display">\pi(a|s) =P[A_t=a|S_t=s]</script><blockquote>
+<p>$$\pi(a|s) &#x3D;P[A_t&#x3D;a|S_t&#x3D;s]$$</p>
+<blockquote>
 <ul>
 <li>策略完整定义了智能体的所有行为方式。</li>
 <li>MDP的策略只依赖于当前的状态，不依赖于历史状态。</li>
 <li>策略是稳态的，不受时间约束。 即$A_t \sim \pi(.|S_t),\forall t\gt 0 $。</li>
-<li>在给定一个MDP，$M=<S,A,P,R,\gamma>$以及一个策略$\pi$，那么状态序列$S_1,S_2,…$，可以表示的前面章节描述的马尔科夫过程(MP)为$<S,P^{\pi}>$。</li>
-<li>在给定一个MDP，$M=<S,A,P,R,\gamma>$以及一个策略$\pi$，那么状态与奖励序列$S_1,R_2,S_2,R_3…，$可以表示前面章节描述的的马尔科夫奖励过程（MRP）为$<S,P^{\pi},R^{\pi},\gamma>$。</li>
+<li>在给定一个MDP，$M&#x3D;&lt;S,A,P,R,\gamma&gt;$以及一个策略$\pi$，那么状态序列$S_1,S_2,…$，可以表示的前面章节描述的马尔科夫过程(MP)为$&lt;S,P^{\pi}&gt;$。</li>
+<li>在给定一个MDP，$M&#x3D;&lt;S,A,P,R,\gamma&gt;$以及一个策略$\pi$，那么状态与奖励序列$S_1,R_2,S_2,R_3…，$可以表示前面章节描述的的马尔科夫奖励过程（MRP）为$&lt;S,P^{\pi},R^{\pi},\gamma&gt;$。</li>
 </ul>
 </blockquote>
-<p>上述中的状态转移矩阵与奖励函数定义为：</p>
-<script type="math/tex; mode=display">P_{s,s'}^{\pi} = \sum_{a \in A}\pi (a|s)P_{ss'}^a</script><script type="math/tex; mode=display">R_{s}^{\pi} = \sum_{a \in A}\pi (a|s)R_{s}^a</script><p>奖励函数可以描述为：在执行策略π时获得的奖励等于执行该状态下所有行为的概率与对应行为产生的即时奖励的乘积的和。</p>
+<p>上述中的状态转移矩阵与奖励函数定义为：<br>$$P_{s,s’}^{\pi} &#x3D; \sum_{a \in A}\pi (a|s)P_{ss’}^a$$</p>
+<p>$$R_{s}^{\pi} &#x3D; \sum_{a \in A}\pi (a|s)R_{s}^a$$</p>
+<p>奖励函数可以描述为：在执行策略π时获得的奖励等于执行该状态下所有行为的概率与对应行为产生的即时奖励的乘积的和。</p>
 <h2 id="5-2-价值函数（Value-Function）"><a href="#5-2-价值函数（Value-Function）" class="headerlink" title="5.2 价值函数（Value Function）"></a>5.2 价值函数（Value Function）</h2><p>MDP的价值函数和MRP的有一些不同，增加了与策略相关的内容。正因为有了策略，价值函数不再单纯的只和状态$s$相关了。采取不同的策略，价值函数也会不同。</p>
 <p>因为从贝尔曼方程中我们也能看出，价值的计算和动作相关，而动作的选择就是策略。但是这里不得不提一下，这里的价值函数只是策略的价值函数，它的好坏不一定代表真正的状态的好坏，它只是根据你提供的这个策略计算出来的，提供的这个策略不一定是一个好策略,那么自然计算出来的价值不一定具有很强的参考性。</p>
-<p>当执行到某一步时，如果需要评估当前智能体在该时间步状态的好坏程度，主要由价值函数（Value Function）来完成。由于价值函数的输入分为状态$s$和&lt;状态，价值&gt;对<code>&lt;s,a&gt;</code>，所以通常当输入状态时统称为状态值函数，输入&lt;状态，价值&gt;对$<s,a>$时统称为动作值函数，当不讨论其输入时，统称为价值函数。</p>
-<p>一个马尔科夫决策过程的状态值函数$v_{\pi}(s)$是对未来奖励的预测，表示在状态<code>s</code>下，跟随给定的策略$\pi$会得到的奖励期望。 </p>
-<script type="math/tex; mode=display">v_{\pi}(s) = E_{\pi}[G_t|S_t=s]</script><p>一个马尔科夫决策过程的动作值函数$q<em>{\pi} (s,a)$，表示在状态s下，执行动作a，并跟随给定的策略$\pi$会得到的奖励期望。 $$q</em>{\pi}(s,a)=E_{\pi}[G_t|S_t=s,A_t=a]$$</p>
+<p>当执行到某一步时，如果需要评估当前智能体在该时间步状态的好坏程度，主要由价值函数（Value Function）来完成。由于价值函数的输入分为状态$s$和&lt;状态，价值&gt;对<code>&lt;s,a&gt;</code>，所以通常当输入状态时统称为状态值函数，输入&lt;状态，价值&gt;对$&lt;s,a&gt;$时统称为动作值函数，当不讨论其输入时，统称为价值函数。</p>
+<p>一个马尔科夫决策过程的状态值函数$v_{\pi}(s)$是对未来奖励的预测，表示在状态<code>s	</code>下，跟随给定的策略$\pi$会得到的奖励期望。 </p>
+<p>$$ v_{\pi}(s) &#x3D; E_{\pi}[G_t|S_t&#x3D;s] $$</p>
+<p>一个马尔科夫决策过程的动作值函数$q_{\pi} (s,a)$，表示在状态s下，执行动作a，并跟随给定的策略$\pi$会得到的奖励期望。 $$q_{\pi}(s,a)&#x3D;E_{\pi}[G_t|S_t&#x3D;s,A_t&#x3D;a]$$</p>
 <h2 id="5-3-最优值函数（Optimal-Value-Function）"><a href="#5-3-最优值函数（Optimal-Value-Function）" class="headerlink" title="5.3 最优值函数（Optimal Value Function）"></a>5.3 最优值函数（Optimal Value Function）</h2><p>我们更希望的是最优值函数，最优值函数是与策略无关的，根据最优值函数可以直接得到最优策略。</p>
 <p>只需要沿着状态价值函数大的方向移动就行，这其实也就是强化学习中的一个流派，基于值学习的(相对于基于策略学习)。值比较大的状态就是好，比如终点前的一个状态值一般就比较大,因为下一刻就可以结束。</p>
 <p>此处用”一般”是因为考量的是状态值，如果这个状态不仅和终点相连并且还和几个失败点相连，状态值不一定大。参考贝尔曼方程计算公式，如果我们使用另一种动作值函数，代表状态$s$下采取特定动作$a$的价值。那么我们就可以说,终点前一个状态，采取动作$a$可以直接到终点，这个$q(s,a)$一定是一个大值。这也提示了使用$q(s,a)$值一般比使用状态价值$v(s)$更好，因为考虑了动作。</p>
 <p>最优值函数确定了马尔科夫决策过程中智能体的最优的可能表现。获得了最优值函数，也就获得了么个状态的最有价值，那么此时马尔科夫决策过程的所有变量都为已知的，接下来便能够很好的求解马尔科夫决策过程的问题。</p>
-<h2 id="5-4-最优策略（Optimal-Policy）"><a href="#5-4-最优策略（Optimal-Policy）" class="headerlink" title="5.4 最优策略（Optimal Policy）"></a>5.4 最优策略（Optimal Policy）</h2><p>最优策略（Optimal Policy）的定义为： <script type="math/tex">\pi \ge \pi ’ \ \ \ if \ \ \ v_{\pi}(s) \ge v_{\pi'}(s),\forall s</script> 在状态$s$下，当策略$\pi$的价值函数优于任何其他策略$\pi’$的价值函数时，策略$\pi$即为状态$s$下的最优策略。关于马尔科夫决策过程的最优策略，有如下3个定理：</p>
-<p>（1）对于任何马尔科夫决策过程问题，存在一个最优策略$\pi<em>* $，其优于（至少等于）任何其他策略，即$\pi</em>* \ge \pi$。</p>
-<p>（2）所有最优策略下都有最优状态值函数，即$v<em>{\pi} (s) = v</em>* (s)$ </p>
-<p>（3）所有最优策略下都有最优动作值函数，即$q<em>{\pi} (s,a) = q</em>* (s,a)$</p>
-<p>基于上述三个定理，寻找最优策略可以通过最优状态值函数$v<em>{\pi}(s)$或者最优动作值函数$q</em>{\pi}(s,a)$来得到。也就是说如果最优值函数已知，则可以获得马尔科夫决策过程的最优策略。</p>
+<h2 id="5-4-最优策略（Optimal-Policy）"><a href="#5-4-最优策略（Optimal-Policy）" class="headerlink" title="5.4 最优策略（Optimal Policy）"></a>5.4 最优策略（Optimal Policy）</h2><p>最优策略（Optimal Policy）的定义为： $$ \pi \ge \pi ’ \ \ \ if \ \ \ v_{\pi}(s) \ge v_{\pi’}(s),\forall s $$ 在状态$s$下，当策略$\pi$的价值函数优于任何其他策略$\pi’$的价值函数时，策略$\pi$即为状态$s$下的最优策略。关于马尔科夫决策过程的最优策略，有如下3个定理：</p>
+<p>（1）对于任何马尔科夫决策过程问题，存在一个最优策略$\pi_* $，其优于（至少等于）任何其他策略，即$\pi_* \ge \pi$。</p>
+<p>（2）所有最优策略下都有最优状态值函数，即$v_{\pi} (s) &#x3D; v_* (s)$ </p>
+<p>（3）所有最优策略下都有最优动作值函数，即$q_{\pi} (s,a) &#x3D; q_* (s,a)$</p>
+<p>基于上述三个定理，寻找最优策略可以通过最优状态值函数$v_{\pi}(s)$或者最优动作值函数$q_{\pi}(s,a)$来得到。也就是说如果最优值函数已知，则可以获得马尔科夫决策过程的最优策略。</p>
 <p>因此，可以通过最大化$q^(s,a)$得到最优策略$\pi$，具体的定义如下：</p>
-<script type="math/tex; mode=display">
-\pi_{}(a|s)=\begin{cases} 1,\quad if \ \ a= \max_{a \in A}\ q(s,a) \\ 0,\quad 其他 \end{cases}</script><p>上式中，$a= \max<em>{a \in A}\ q(s,a)$时，$\pi(a|s)$为1，表明如果动作值函数的最大值为最优策略所选择的动作，那么智能体已经找到最优策略$\pi$。只要最优动作值函数$q</em><em> (s,a)$已知，就可以立即获得最优策略。综上所述，最优策略$\pi$对于任何马尔科夫决策过程都会有一个对应的确定性最优策略$\pi_{</em>}(a|s)$。</p>
+<p>$$<br>\pi_{}(a|s)&#x3D;\begin{cases} 1,\quad if \ \ a&#x3D; \max_{a \in A}\ q(s,a) \ 0,\quad 其他 \end{cases}<br>$$ </p>
+<p>上式中，$a&#x3D; \max_{a \in A}\ q(s,a)$时，$\pi(a|s)$为1，表明如果动作值函数的最大值为最优策略所选择的动作，那么智能体已经找到最优策略$\pi$。只要最优动作值函数$q_* (s,a)$已知，就可以立即获得最优策略。综上所述，最优策略$\pi$对于任何马尔科夫决策过程都会有一个对应的确定性最优策略$\pi_{*}(a|s)$。</p>
 <p>到目前为止，最优策略的求解问题事实上已经转换成为了最优值函数的求解问题。如果已经求出最优值函数，那么最优策略是非常容易得到的，反之同理。通过最优策略求解问题的转换，可以将鼓励的最优策略$\pi$、最优值函数$v(s)$、最优动作值函数$q^*(s,a)$连为一体。需要注意的是，在实际工作中，也可以不求最优值函数，而使用其他方法直接求解最优策略。</p>
 <h3 id="5-4-求解贝尔曼最优方程"><a href="#5-4-求解贝尔曼最优方程" class="headerlink" title="5.4 求解贝尔曼最优方程"></a>5.4 求解贝尔曼最优方程</h3><p>上面描述的回溯图过程中已经给出了贝尔曼最优方程的基本形式，其阐述的一个事实是：最优策略下各个状态的价值一定等于这个状态下最优动作的期望回报。我们已经知道，</p>
 <ul>
@@ -239,7 +244,16 @@
     
 
     <div class="container post-prev-next">
-        <a class="next"></a>
+        
+        <a href="/RL-Theory/RL1-Intro/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">RL1-Intro</h3>
+                </div>
+            </div>
+        </a>
+        
         
         <a href="/RL-Theory/RL3-DP/" class="prev">
             <div>

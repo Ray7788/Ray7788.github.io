@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>Hello World - Ray</title>
+  <title>RL1-Intro - Ray</title>
   
     <link rel="shortcut icon" href="/source/personal/rui.jpg">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="Hello World - Ray" />
+  <meta property="og:title" content="RL1-Intro - Ray" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://example.com/uncategorized/hello-world/index.html" />
+  <meta property="og:url" content="http://example.com/RL-Theory/RL1-Intro/index.html" />
   
-  <meta property="og:image" content="/source/personal/rui.jpg" />
+  <meta property="og:image" content="/img/RL2-00.png" />
   
-  <meta property="og:article:published_time" content="2023-02-25T21:15:12.000Z" />
+  <meta property="og:article:published_time" content="2023-10-29T15:37:55.768Z" />
   
   <meta property="og:article:author" content="Rui Xu" />
   
@@ -139,34 +139,83 @@
 <article class="post">
     <div class="meta">
         
-
+        <div class="categories text-uppercase">
         
-        <div class="date" id="date">
-            <span>February</span>
-            <span>25,</span>
-            <span>2023</span>
+            <a href="/categories/RL-Theory/">RL-Theory</a>
+        
         </div>
         
 
-        <h2 class="title">Hello World</h2>
+        
+
+        <h2 class="title">RL1-Intro</h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h1 id="1。-强化学习概述"><a href="#1。-强化学习概述" class="headerlink" title="1。 强化学习概述"></a>1。 强化学习概述</h1><p>这里不赘述基本概念了，只强调重点：</p>
+<p>Barto在IJCAI2018做了名为“A History of Reinforcement Learning”的<a target="_blank" rel="noopener" href="https://youtu.be/ul6B2oFPNDM?si=Qofc1hWxd9O4_nnC">专题分享</a>,感兴趣可以去看。</p>
+<ul>
+<li><p>没有监督数据，只有奖励信号。<br>无监督学习（Unsupervised Learning） 是一个典型的寻找未标注数据中隐含结构的过程。强化学习有时候会被认为是一种无监督学习的方式，但是他们是有区别的。 强化学习的主要目的是最大化收益信号，而不是寻找数据的隐含结构。虽然无监督学习通过智能体寻找隐含结构对强化学习很有意义，但是这并不能解决最大化收益信号的问题。所以<strong>强化学习 Reinforcement Learning</strong>是在监督学习与无监督学习之外的第三种机器学习范式。 </p>
+</li>
+<li><p>奖励信号不一定是实时的，可能是延后的，可能延后很多。</p>
+</li>
+<li><p>序列性, 时间是一个重要因素。</p>
+</li>
+<li><p>当前的行为影响到后续的数据。</p>
+</li>
+</ul>
+<h1 id="2-重要概念"><a href="#2-重要概念" class="headerlink" title="2. 重要概念"></a>2. 重要概念</h1><h2 id="观测（Observation）"><a href="#观测（Observation）" class="headerlink" title="观测（Observation）"></a>观测（Observation）</h2><p>观测（Observation）是指观测到或能感知到的所有参数的集合，如通过摄像头采集的图像，通过传感器获取的各种信号，Ot表示t时刻的观测结果。对于空调的控制，观测数据可以是环温、制冷（热）量、COP、室内温度、设定温度、水流量、电费等。</p>
+<h2 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h2><h2 id="状态（state）"><a href="#状态（state）" class="headerlink" title="状态（state）"></a>状态（state）</h2><p>State分为环境State，智能体State和信息State：</p>
+<ul>
+<li><p>环境State</p>
+<ul>
+<li><p>环境状态Ste是对环境t时刻具体情景的完备性描述，事实上我们无法获得也没有必要获得环境状态的完备性描述，一方面是因为很多参数是不可测或无法获得的，另一方面是因为一些环境状态数据与控制无关。</p>
+</li>
+<li><p>是环境的私有表示</p>
+</li>
+<li><p>是一些环境用来挑选下一步观察和奖励的数据</p>
+</li>
+<li><p>环境State并不总是对智能体可见</p>
+</li>
+<li><p>即使可见，也可能包含一些对任务无关的信息</p>
+</li>
+</ul>
+</li>
+<li><p>智能体State</p>
+<ul>
+<li><p>智能体状态Sta则是t时刻所有环境状态中与智能体（Agent）相关的部分，或者说与设计最优智能体相关的最小状态包络，即只包含影响游戏最终结果的最简完备信息，通常Sta⊆Ste。</p>
+</li>
+<li><p>它是智能体的内部表示</p>
+</li>
+<li><p>包含一些智能体用来挑选下一步动作的信息</p>
+</li>
+<li><p>智能体State是我们强化学习算法需要的状态</p>
+</li>
+<li><p>他可以是history的任何函数：<code> Sat = f (Ht)</code></p>
+</li>
+</ul>
+</li>
+<li><p>信息State</p>
+<ul>
+<li><p>它包含历史中所有的有用的信息</p>
+</li>
+<li><p>也称为Markov State，马尔科夫状态</p>
+</li>
+<li><p>既然叫马尔科夫状态，也就是说，下一个状态只依赖于当前状态</p>
+</li>
+<li><p>环境State也是马尔科夫的 history也是马尔科夫的</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="奖励（reward）："><a href="#奖励（reward）：" class="headerlink" title="奖励（reward）："></a><strong>奖励</strong>（reward）：</h2><p>标量。用于反映agent在t时刻的表现。根据奖励假设，深度学习问题都可以变为最大化累积奖励的问题。奖励可能且通常是延迟的。</p>
+<h2 id="个体和环境（agent-amp-environment）："><a href="#个体和环境（agent-amp-environment）：" class="headerlink" title="个体和环境（agent &amp; environment）："></a><strong>个体和环境</strong>（agent &amp; environment）：</h2><p>agent是算法和环境交换信息的接口。agent从环境接收observation和reward，并且向环境输出action。而环境则接受action，给出observation和reward。</p>
+<ul>
+<li><strong>完全可观测的环境</strong>（fully observable environment）：个体能够直接观测到环境状态。在这种条件下，个题对环境的观测&#x3D;个体状态&#x3D;环境状态。这种问题是一个MDP问题。</li>
+<li><strong>部分可间接观测的环境</strong>（partially observable environment）：个体间接观测环境。在这种条件下，个体状态≠环境状态，个体必须构建他自己的状态呈现形式。例如：beliefs of environment state、recurrent neural network(RNN)</li>
+</ul>
 
     </div>
 
@@ -177,26 +226,38 @@
             <p>This post is written by Rui Xu, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
         </div>
         
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/AI/" class="tag">#AI</a><a href="/tags/Reinforcement-Learning/" class="tag">#Reinforcement Learning</a>
+        </p>
+        
     </div>
     
 
     <div class="container post-prev-next">
         
-        <a href="/Programming/Use-Haskell-solve-QuadTree-problems/" class="next">
+        <a href="/RL-Theory/RL4-MonteCarlo/" class="next">
             <div>
                 <div class="text">
                     <p class="label">Next</p>
-                    <h3 class="title">通过函数式编程和四叉树模型解决双值图像的色彩处理问题 Using Haskell to solve QuadTree problems</h3>
+                    <h3 class="title">强化学习4:Monte Carlo</h3>
                 </div>
             </div>
         </a>
         
-        <a class="prev"></a>
+        
+        <a href="/RL-Theory/RL2-5-Bellman/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">强化学习2-5:MDP Reinforcement Learning Bellman</>
+                </div>
+            </div>
+        </a>
+        
     </div>
 
-    
-        
-        
     
 </article>
 
