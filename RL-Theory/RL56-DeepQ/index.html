@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>RL1-Intro - Ray</title>
+  <title>RL56-DeepQ - Ray</title>
   
     <link rel="shortcut icon" href="/source/personal/rui.jpg">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="RL1-Intro - Ray" />
+  <meta property="og:title" content="RL56-DeepQ - Ray" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://example.com/RL-Theory/RL1-Intro/index.html" />
+  <meta property="og:url" content="http://example.com/RL-Theory/RL56-DeepQ/index.html" />
   
-  <meta property="og:image" content="/img/RL2-00.png" />
+  <meta property="og:image" content="/source/personal/rui.jpg" />
   
-  <meta property="og:article:published_time" content="2023-10-29T15:37:55.768Z" />
+  <meta property="og:article:published_time" content="2023-12-31T20:15:19.036Z" />
   
   <meta property="og:article:author" content="Rui Xu" />
   
@@ -144,72 +144,39 @@
 
         
 
-        <h1 class="title">RL1-Intro</h1>
+        <h1 class="title">RL56-DeepQ</h1>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        <h1 id="1。-强化学习概述"><a href="#1。-强化学习概述" class="headerlink" title="1。 强化学习概述"></a>1。 强化学习概述</h1><p>这里不赘述基本概念了，只强调重点：</p>
-<p>Barto在IJCAI2018做了名为“A History of Reinforcement Learning”的<a target="_blank" rel="noopener" href="https://youtu.be/ul6B2oFPNDM?si=Qofc1hWxd9O4_nnC">专题分享</a>,感兴趣可以去看。</p>
-<ul>
-<li><p>没有监督数据，只有奖励信号。<br>无监督学习（Unsupervised Learning） 是一个典型的寻找未标注数据中隐含结构的过程。强化学习有时候会被认为是一种无监督学习的方式，但是他们是有区别的。 强化学习的主要目的是最大化收益信号，而不是寻找数据的隐含结构。虽然无监督学习通过智能体寻找隐含结构对强化学习很有意义，但是这并不能解决最大化收益信号的问题。所以<strong>强化学习 Reinforcement Learning</strong>是在监督学习与无监督学习之外的第三种机器学习范式。 </p>
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><ul>
+<li><p>Sarsa和Q-learning在探索时都是用到了ε-greedy的策略。在训练过程中我们既要保证我们会沿着Q表格的指引进行活动，但同时我们有需要进行探索，我们不能固守已有的Q表格而不做出新的尝试，如何确定某一步是按照Q表格进行还是进行一步随机探索呢，这里使用到了ε-greedy，我们会事先设定一个ε的值，假设我设定ε值为(0,1)，在每一部行动前我们会掷色子（在0-1之间生成一个随机数），随机数如果大于ε我们选择按Q表格行动，小于ε我们会在可能的行动中随机探索一次。</p>
 </li>
-<li><p>奖励信号不一定是实时的，可能是延后的，可能延后很多。</p>
+<li><p>区分on-policy和off-policy</p>
 </li>
-<li>序列性, 时间是一个重要因素。</li>
-<li>当前的行为影响到后续的数据。</li>
+<li>MDP包括{S,A,R,P}四个要素，其中R为奖励函数，P为环境的状态转移概率，即环境不确定度，但是以上两个因素很多情况下是未知的，这时就需要使用无模型（model-free）的方法。</li>
 </ul>
-<h1 id="2-重要概念"><a href="#2-重要概念" class="headerlink" title="2. 重要概念"></a>2. 重要概念</h1><h2 id="观测（Observation）"><a href="#观测（Observation）" class="headerlink" title="观测（Observation）"></a>观测（Observation）</h2><p>观测（Observation）是指观测到或能感知到的所有参数的集合，如通过摄像头采集的图像，通过传感器获取的各种信号，Ot表示t时刻的观测结果。对于空调的控制，观测数据可以是环温、制冷（热）量、COP、室内温度、设定温度、水流量、电费等。</p>
-<h2 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h2><h2 id="状态（state）"><a href="#状态（state）" class="headerlink" title="状态（state）"></a>状态（state）</h2><p>State分为环境State，智能体State和信息State：</p>
+<h1 id="Q-learning"><a href="#Q-learning" class="headerlink" title="Q-learning"></a>Q-learning</h1><p>Q-Learning的目的是学习特定State下、特定Action的价值。Q-table可以形象地将其称为生活手册，因为其表示了在不同动作和状态之下所得到的Q函数.建立一个Q-Table，以State为行、Action为列，通过每个动作带来的奖赏更新Q-Table。因此,Q-table可以作为一种我们强化学习之后得到的结果，也就是输出。</p>
 <ul>
-<li><p>环境State</p>
-<ul>
-<li><p>环境状态Ste是对环境t时刻具体情景的完备性描述，事实上我们无法获得也没有必要获得环境状态的完备性描述，一方面是因为很多参数是不可测或无法获得的，另一方面是因为一些环境状态数据与控制无关。</p>
-</li>
-<li><p>是环境的私有表示</p>
-</li>
-<li><p>是一些环境用来挑选下一步观察和奖励的数据</p>
-</li>
-<li><p>环境State并不总是对智能体可见</p>
-</li>
-<li><p>即使可见，也可能包含一些对任务无关的信息</p>
-</li>
+<li>e_predict</li>
+<li>e_target</li>
 </ul>
-</li>
-<li><p>智能体State</p>
-<ul>
-<li><p>智能体状态Sta则是t时刻所有环境状态中与智能体（Agent）相关的部分，或者说与设计最优智能体相关的最小状态包络，即只包含影响游戏最终结果的最简完备信息，通常Sta⊆Ste。</p>
-</li>
-<li><p>它是智能体的内部表示</p>
-</li>
-<li><p>包含一些智能体用来挑选下一步动作的信息</p>
-</li>
-<li><p>智能体State是我们强化学习算法需要的状态</p>
-</li>
-<li><p>他可以是history的任何函数：<code>Sat = f (Ht)</code></p>
-</li>
-</ul>
-</li>
-<li><p>信息State</p>
-<ul>
-<li><p>它包含历史中所有的有用的信息</p>
-</li>
-<li><p>也称为Markov State，马尔科夫状态</p>
-</li>
-<li><p>既然叫马尔科夫状态，也就是说，下一个状态只依赖于当前状态</p>
-</li>
-<li><p>环境State也是马尔科夫的 history也是马尔科夫的</p>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="奖励（reward）："><a href="#奖励（reward）：" class="headerlink" title="奖励（reward）："></a><strong>奖励</strong>（reward）：</h2><p>标量。用于反映agent在t时刻的表现。根据奖励假设，深度学习问题都可以变为最大化累积奖励的问题。奖励可能且通常是延迟的。</p>
-<h2 id="个体和环境（agent-amp-environment）："><a href="#个体和环境（agent-amp-environment）：" class="headerlink" title="个体和环境（agent &amp; environment）："></a><strong>个体和环境</strong>（agent &amp; environment）：</h2><p>agent是算法和环境交换信息的接口。agent从环境接收observation和reward，并且向环境输出action。而环境则接受action，给出observation和reward。</p>
-<ul>
-<li><strong>完全可观测的环境</strong>（fully observable environment）：个体能够直接观测到环境状态。在这种条件下，个题对环境的观测=个体状态=环境状态。这种问题是一个MDP问题。</li>
-<li><strong>部分可间接观测的环境</strong>（partially observable environment）：个体间接观测环境。在这种条件下，个体状态≠环境状态，个体必须构建他自己的状态呈现形式。例如：beliefs of environment state、recurrent neural network(RNN)</li>
-</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">初始化:	初始化学习率、可执行动作、Q_table等参数</span><br><span class="line">动作选择:	根据小男孩当前所处的环境和Q_table进行动作选择</span><br><span class="line">学习:	根据小男孩当前所处的环境对其它环境的预测情况q_predict和下一步环境的实际情况q_target更新Q_table表</span><br><span class="line">确认是否存在该环境:	由于在学习之前环境是未知的，当进入一个新环境时，需要生成一个得分都为0的动作表格</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">模块名称	作用/功能</span><br><span class="line">初始化	初始化环境参数、用于构建环境</span><br><span class="line">图画更新	用于更新当前的图画，便于用户观察</span><br><span class="line">环境观察	用于返回当前环境情况</span><br><span class="line">终点观察	用于返回是否到达终点</span><br><span class="line">更新坐标	用于更新当前所处位置</span><br><span class="line">下一环境获取	用于获取下一步的环境的实际情况</span><br><span class="line">参数归零	用于每一个世代坐标和当前行走步数的归零</span><br></pre></td></tr></table></figure>
+<p>Q-Learning是off-policy的。异策略是指行动策略和评估策略不是一个策略。Q-Learning中行动策略是ε-greedy策略，要更新Q表的策略是贪婪策略。</p>
+<p>①target policy：目标策略，如同战役中的军师，在幕后学习前方将士传来的经验并做出决策，不需要亲自与环境交互，是我们要学习的策略。</p>
+<p>②behavior policy：行为策略，如同一线的战士，根据军师的命令在战场上实际作战，并将得到的经验传给后方的军师。</p>
+<p> $Q=reward_1  +γ∗reward _2 +…+γ∗reward_n$<br>​<br>我们先看下Q-learning算法的更新Q值的公式：</p>
+<p> <strong>$Q∗(s_t,a_t)=Q(s_t ,a_t)+α[R_t+γ a ′max(Q(s_t+1 ,a_t+1)−Q(s_t,a_t )]$</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/a5d89c06bd624a9295316c0346f73711.png#pic_center" alt="算法伪代码"></p>
+<h1 id="SARSA"><a href="#SARSA" class="headerlink" title="SARSA"></a>SARSA</h1><p>Sarsa全称是<strong>state-action-reward-state-action</strong>。 也是采用Q-table的方式存储动作值函数；而且决策部分和Q-Learning是一样的, 也是采用ε-greedy策略。不同的地方在于 Sarsa 的更新方式是不一样的。</p>
+<p>Q-Learning算法，先假设下一步选取最大奖赏的动作，更新值函数。然后再通过ε-greedy策略选择动作。<br>Sarsa算法，先通过ε-greedy策略执行动作，然后根据所执行的动作，更新值函数。</p>
+<p>我们再看下Sarsa算法的更新Q值的公式</p>
+<p> <strong>$Q∗(s<em>t,a_t)=Q(s_t ,a_t)+α[R_t+γ(Q(s</em>(t+1) ,a_(t+1))−Q(s_t,a_t )]$</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/2a37344f3db347deb8d3f2b81fbdf22d.png#pic_center" alt="算法伪代码"></p>
+<p>因此两种算法在表现上也会有很大的区别，Sarsa表现得更为胆小，因为它会记住每一次错误的探索，它会对错误较为敏感，而Q-learning只在乎Q值的最大化，因此Q-learning会十分贪婪，表现得十分aggressive。</p>
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><p><a target="_blank" rel="noopener" href="http://t.csdnimg.cn/F0DZT">http://t.csdnimg.cn/F0DZT</a><br><a target="_blank" rel="noopener" href="http://t.csdnimg.cn/98Ttu">http://t.csdnimg.cn/98Ttu</a></p>
 
     </div>
 
@@ -231,21 +198,21 @@
 
     <div class="container post-prev-next">
         
-        <a href="/RL-Theory/RL4-MonteCarlo/" class="next">
+        <a href="/uncategorized/RL5-TD/" class="next">
             <div>
                 <div class="text">
                     <p class="label">Next</p>
-                    <h3 class="title">强化学习4:Monte Carlo</h3>
+                    <h3 class="title">RL5-TD</h3>
                 </div>
             </div>
         </a>
         
         
-        <a href="/Programming/Using-the-Minimax-Algorithm-to-implement-the-Basic-Human-Machine-Confrontation-Game/" class="prev">
+        <a href="/Prepare/Set-up-machine/" class="prev">
             <div>
                 <div class="text">
                     <p class="label">Previous</p>
-                    <h3 class="title">通过Minimax算法实现基础人机对抗博弈 (Minimax Algorithm)</>
+                    <h3 class="title">Set up DL machine配置深度学习环境</>
                 </div>
             </div>
         </a>

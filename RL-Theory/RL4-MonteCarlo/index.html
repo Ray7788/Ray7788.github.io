@@ -80,11 +80,7 @@
   
 
   
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
     <body
         data-color-scheme="auto"
         data-uppercase-categories="true"
@@ -148,13 +144,71 @@
 
         
 
-        <h2 class="title">强化学习4:Monte Carlo</h2>
+        <h1 class="title">强化学习4:Monte Carlo</h1>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        
+        <p>23-08-10</p>
+<h1 id="强化学习4：蒙特卡洛（MonteCarlo）"><a href="#强化学习4：蒙特卡洛（MonteCarlo）" class="headerlink" title="强化学习4：蒙特卡洛（MonteCarlo）"></a>强化学习4：蒙特卡洛（MonteCarlo）</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>通过贝尔曼方程求解最优策略 $\pi^<em>$有3种基本方法：动态规划法、蒙特卡洛法和时间差分法。前面我们介绍了如何利用动态规划法去求解环境知识完备（即马尔可夫决策过程已知）的强化学习任务。<br>简而言之，首先通过策略评估计算给定策略$\pi$的优劣程度，然后采用策略迭代算法获得基于策略$\pi$的最优价值函数$v<em>{\pi}(s)$，并根据最优价值函数$v</em>{\pi}(s)$确定最优策略$\pi$；出于效率的考虑，也可以采用值迭代算法来获得最优价值函数$v_{\pi} (s)$和最优策略$\pi^</em>$。<br>在实际任务中，环境知识完备性这一先决条件较难满足，但是，也就是无法在现实世界同时知道MDP的5元组⟨S,A,P,R,γ⟩。也就意味着大量的强化学习任务难以直接采用动态规划法进行求解。对于环境知识不完备的MDP，即转移矩阵$P$以及奖励$R$未知的研究领域称为<strong>无模型</strong>（Model-Free）方法。Model-free方法的基本方法就是使用蒙特卡洛法（Monte Carlo，MC）和时间差分法（Temporal-difference，TD）。<br>虽然不知道状态转移概率 P \mathcal{P} P，但是这个概率真实存在。可以直接尝试，不断采样，然后会得到奖赏，通过奖赏来评估值函数。这与蒙特卡罗方法的思想一致。</p>
+<h1 id="蒙特卡洛-Monte-Carlo"><a href="#蒙特卡洛-Monte-Carlo" class="headerlink" title="蒙特卡洛 Monte Carlo"></a>蒙特卡洛 Monte Carlo</h1><p>“蒙特卡洛”这一名字来源于摩纳哥的城市蒙特卡洛（MonteCarlo）。该方法由著名的美国计算机科学家冯·诺伊曼和S.M.乌拉姆在20世纪40年代第二次世界大战中研制原子弹（”曼哈顿计划”）时首先提出。 蒙特卡洛法是一种基于采样的算法名称，依靠重复随机抽样来获得数值结果的计算方法，其核心理念是使用随机性来解决原则上为确定性的问题。通俗而言，蒙特卡洛法采样越多，结果就越近似最优解，即通过多次采样逼近最优解。 </p>
+<p>举个简单的例子。<br>去蔬菜基地摘玉米，规则是每次只能摘一个玉米，并且手中只能留下一个玉米，最后走出蔬菜基地的时候也只能带走一个玉米，目标是使得最后拿出蔬菜基地的玉米最大。可以达成这样一个共识：进入蔬菜基地后每次摘一个大玉米，看到比该玉米更大的则替换原来的玉米。基于上述共识，可以保证每次摘到的玉米都至少不比上一次摘到的玉米小。如果摘玉米的次数越多，挑出来的玉米就越大，但无法确保最后摘到的玉米一定是最大的，除非把整个蔬菜基地的玉米都摘一遍。即尽量找较大的，但不保证是最大的。采样次数越多，结果就越近似最优解，这种方法就属于蒙特卡洛法。</p>
+<p>蒙特卡洛法能够处理免模型的任务的究其原因是无须依赖环境的完备知识（Environment backup），只需收集从环境中进行采样得到的经验轨迹（Experience episode），基于经验轨迹集数据的计算，可求解最优策略。</p>
+<ul>
+<li>MC直接从Episode的经验中学习且必须从完整的Episode中学习：没有bootstrapping.</li>
+<li>MC不基于模型，是一种model-free方法，即没有MDP的转移概率$P$以及奖励$R$的先验知识。</li>
+<li>MC使用的方法是：价值=平均回报,即value = mean return。</li>
+</ul>
+<blockquote>
+<p>比如，现评估某状态$s$的价值函数。我们采样了两个经验轨迹，从一个经验轨迹里面得到的回报是5，然后下一个经验轨迹里面的得到的回报是7，我们可以从起始状态来评估此状态的价值函数为： <script type="math/tex">\frac{5+7}{2}=6</script></p>
+</blockquote>
+<ul>
+<li>其实从字面理解就是求均值的意思。就是状态$s$在每一个样本中收获的回报均值。</li>
+<li>MC只能应用于episodic MDPs：所有的Episode都必须终止</li>
+<li>Return不是针对于Episode的，而是针对于Episode的某一个状态，是从这个状态开始经历完Episode时得到的有衰减的即时奖励的总和。</li>
+<li><p>从一个Episode中，我们可以得到该Episode内所有状态的收获。当一个状态在Episode内出现多次，该状态的收获有不同的计算方法：first visit和every visit</p>
+</li>
+<li><p>缺点在于只能应用于一定有终结点（termination point）的按幕（Episode）分的MDP过程。</p>
+</li>
+<li>每条Episode都是一条从起始状态到结束状态的经历（例如在走迷宫，一条episode就是从你开始进入迷宫，到最后走出迷宫的路径），完整的Episode（完整的Episode包含：状态的转移、使用的行为序列、中间状态的即时奖励、终止状态的即时奖励）不要求起始状态一定是某一个特定的状态，但是要求个体最终进入环境认可的某一个终止状态。</li>
+<li>要得到的是某个状态$s$的平均收获，所以episode必须经过该状态$s$才能用于计算.</li>
+<li>理论上完整的状态序列越多，结果越准确。</li>
+</ul>
+<h2 id="蒙特卡洛策略评估（MC-Policy-Evaluation）"><a href="#蒙特卡洛策略评估（MC-Policy-Evaluation）" class="headerlink" title="蒙特卡洛策略评估（MC Policy Evaluation）"></a>蒙特卡洛策略评估（MC Policy Evaluation）</h2><p>特卡洛法采用时间步有限的、完整的经验轨迹，其所产生的经验信息可推导出每个状态的平均奖励，以此来代替奖励的期望（即目标状态值）。换言之，在给定的策略$\pi$下，蒙特卡洛法从一系列完整的经验轨迹中学习该策略下的状态值函数$v<em>{\pi}(s)$。 当模型环境未知（Model-free）时，智能体根据策略$\pi$进行采样，从起始状态$s_0$出发，执行该策略$T$步后达到一个终止状态$s_T$，从而获得一条完整的经验轨迹。 $$ s_0,a_0,r_1,s_1,a_1,r_2,…,s</em>{T-1},a<em>{T-1},r_T,s_T \sim \pi <script type="math/tex">对于$t$时刻的状态$s$，未来折扣累积奖励为：</script> G_t=r_t+\gamma r</em>{t+1}+…+\gamma^{T-1} r<em>{t+T} <script type="math/tex">蒙特卡洛法利用经验轨迹的平均未来折扣累积奖励$G$作为状态值的期望。</script> G=average(G_1+G_2+…+G_T) $$ 而强化学习的目标是求解最优策略$\pi^*$，得到最优策略的一个常用方法是求解状态值函数$v</em>{\pi}(s)$的期望。如果采样的经验轨迹样本足够多，就可以精确估计出状态$s$上下遵循策略$\pi$的期望，即状态值函数$v<em>{\pi}(s)$。 $$ v</em>{\pi}(s)=\mathbb E[G | s \in S] $$ 当根据策略$\pi$收集到的经验轨迹样本趋于无穷多时，得到的状态值$v_{\pi}(s)$也就无限接近于真实的状态值。</p>
+<h2 id="计算Return的两种方法"><a href="#计算Return的两种方法" class="headerlink" title="计算Return的两种方法"></a>计算Return的两种方法</h2><h3 id="首次访问蒙特卡洛策略评估（First-Visit-Monte-Carlo-Policy-Evaluation）"><a href="#首次访问蒙特卡洛策略评估（First-Visit-Monte-Carlo-Policy-Evaluation）" class="headerlink" title="首次访问蒙特卡洛策略评估（First-Visit Monte-Carlo Policy Evaluation）"></a>首次访问蒙特卡洛策略评估（First-Visit Monte-Carlo Policy Evaluation）</h3><p>在给定一个策略，使用一系列完整经验轨迹评估某一个状态$s$时，对于每一个经验轨迹，仅当该状态$s$首次出现的时间$t$列入计算：</p>
+<ul>
+<li>状态出现的次数加1： $N(s) \leftarrow N(s)+1$</li>
+<li>总回报更新： $S(s) \leftarrow S(s)+G_t$</li>
+<li>使用平均回报更新值函数： $V(s) = S(s)/N(s)$</li>
+<li>由大数定理可以得到，当$N(s)$趋于无穷大时：  $V(s) \rightarrow v_{\pi}(s)$</li>
+</ul>
+<h3 id="每次访问蒙特卡洛策略评估（Every-Visit-Monte-Carlo-Policy-Evaluation）"><a href="#每次访问蒙特卡洛策略评估（Every-Visit-Monte-Carlo-Policy-Evaluation）" class="headerlink" title="每次访问蒙特卡洛策略评估（Every-Visit Monte-Carlo Policy Evaluation）"></a>每次访问蒙特卡洛策略评估（Every-Visit Monte-Carlo Policy Evaluation）</h3><p>在给定一个策略，使用一系列完整经验轨迹评估某一个状态$s$时，对于每一个经验轨迹，仅当该状态$s$每次出现在状态转移链时，例如，一次在时刻$t<em>1$，一次在时刻$t_2$，则两次对应的$G</em>{t<em>1}$,$G</em>{t_2}$都应该纳入对$v(s)$的计算</p>
+<ul>
+<li>状态出现的次数加1： $N(s) \leftarrow N(s)+1$ (每次访问状态$s$)</li>
+<li>总回报更新： $S(s) \leftarrow S(s)+G_t$(每次访问状态$s$)</li>
+<li>使用平均回报更新值函数： $V(s) = S(s)/N(s)$</li>
+<li>由大数定理可以得到，当$N(s)$趋于无穷大时：  $V(s) \rightarrow v_{\pi}(s)$</li>
+</ul>
+<h2 id="累进更新（增加）平均值-（Incremental-Mean）"><a href="#累进更新（增加）平均值-（Incremental-Mean）" class="headerlink" title="累进更新（增加）平均值 （Incremental Mean）"></a>累进更新（增加）平均值 （Incremental Mean）</h2><p>不论是First-Visit还是Every-Visit，在计算回报均值时，都是利用总回报除以状态s的总访问次数的，我们能否对均值进行增量式的求取？</p>
+<p>这里假设每次的回报为$x<em>j$，在$k$次后平均回报为： $$ \mu_k=\frac{1}{k}\sum</em>{j=1}^kx<em>j <script type="math/tex">在$k-1$次后平均回报为：</script> \mu</em>{k-1}=\frac{1}{k-1}\sum<em>{j=1}^{k-1}x_j <script type="math/tex">这种增量式的推导过程可以按照如下过程进行：</script> \begin{aligned} \mu_k&amp;=\frac{1}{k}\sum</em>{j=1}^kx<em>j\ &amp;=\frac{1}{k}（x_k+\sum</em>{j=1}^{k-1}x<em>j)\ &amp;=\frac{1}{k}（x_k+(k-1)\mu</em>{k-1})\ &amp;=\mu<em>{k-1}+\frac{1}{k}（x_k-\mu</em>{k-1})\ \end{aligned} $$</p>
+<blockquote>
+<ul>
+<li>静态问题就是说我们的MDP是不变的，比如转移矩阵，比如奖励函数</li>
+<li>非静态问题即随着时间的推移，MDP中的某些参数将会发生改变。</li>
+</ul>
+</blockquote>
+<h2 id="蒙特卡洛累进更新-Incremental-Monte-Carlo-Updates"><a href="#蒙特卡洛累进更新-Incremental-Monte-Carlo-Updates" class="headerlink" title="蒙特卡洛累进更新(Incremental Monte-Carlo Updates)"></a>蒙特卡洛累进更新(Incremental Monte-Carlo Updates)</h2><p>对于一系列经验轨迹：$S<em>0,A_0,R_1,S_1,A_1,R_2,…,S</em>{T-1},A_{T-1},R_T,S_T$</p>
+<p>按照更新平均值的方法可以进行如下累进更新响应的价值函数：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& N(S_t) \leftarrow N(S_t)+1\\
+& V(S_t) \leftarrow V(S_t)+\frac{1}{N(S_t)}(G_t-V（S_t）)\\
+&w.r.t \ \ \ \ G_t=R_t+\gamma R_{t+1}+...+\gamma^{T-1} R_{t+T}
+\end{aligned}</script><p>这里我们将MC方法变为增量式，我们可以扩展开改变$\frac{1}{N(S_t)}$，将他定义为一个类似于学习率的参数$\alpha$，在处理非静态问题时，使用这个方法跟踪一个实时更新的平均值是非常有用的，可以扔掉那些已经计算过的episode信息。</p>
+<p>引入参数$\alpha$后的状态价值更新方法可以更改为：</p>
+<script type="math/tex; mode=display">
+V(S_t) \leftarrow V(S_t)+\alpha(G_t-V（S_t）)</script>
     </div>
 
     
@@ -241,7 +295,7 @@
             </div>
             
         </div>
-        <span>&copy; 2023 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        <span>&copy; 2024 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
         
         <br>
         <span class="footer-extra-description">永远相信美好的事情即将发生。Always believe something great is going to happen.</span>
