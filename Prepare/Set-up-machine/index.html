@@ -156,7 +156,9 @@
 <li>只需要在主系统安装NVIDIA driver:<br><code>Once a Windows NVIDIA GPU driver is installed on the system, CUDA becomes available within WSL 2. The CUDA driver installed on Windows host will be stubbed inside the WSL 2 as lib cuda. so, therefore users must not install any NVIDIA GPU Linux driver within WSL2</code>,不要再在wsl中重复安装驱动！</li>
 <li>CUDA Toolkit: 在安装CUDA版本前,先考虑自己的显卡型号和自己要用的开发框架(比如torch)所适配的CUDA版本,太新的CUDA版本可能会导致其他开发平台没有合适的版本,安装后用<code>nvcc -V</code>检查当前安装的版本,<code>nvidia-smi</code>显示的是支持的最高版本,并不是本机版本,如果安装错了可参照<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37605642/article/details/99100924">本篇文章</a>重装</li>
 <li>尽早安装conda,提早管理不同的环境(pytorch, CUDA等等),避免后续出现版本冲突.</li>
-<li>WSL安装位置不要装在C盘!占用大量空间,后续迁移见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/621873601">此文章</a>,Docker和conda也不要在C盘装,后患无穷!<h2 id="软件使用注意事项"><a href="#软件使用注意事项" class="headerlink" title="软件使用注意事项"></a>软件使用注意事项</h2></li>
+<li>WSL安装位置不要装在C盘!占用大量空间,后续迁移见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/621873601">此文章</a>,Docker和conda也不要在C盘装,后患无穷!</li>
+</ul>
+<h2 id="软件使用注意事项"><a href="#软件使用注意事项" class="headerlink" title="软件使用注意事项"></a>软件使用注意事项</h2><ul>
 <li>最新版本的anaconda移除了用来激活环境的<code>conda activate XXX</code>的指令,改用<code>source activate</code>,</li>
 <li>anaconda中有环境嵌套的问题,需要多次<code>conda deactivate</code></li>
 <li>安装某些包的时候优先conda,如果无效或者搜索不到source,再用pip</li>

@@ -157,8 +157,10 @@
 </li>
 <li><p>奖励信号不一定是实时的，可能是延后的，可能延后很多。</p>
 </li>
-<li>序列性, 时间是一个重要因素。</li>
-<li>当前的行为影响到后续的数据。</li>
+<li><p>序列性, 时间是一个重要因素。</p>
+</li>
+<li><p>当前的行为影响到后续的数据。</p>
+</li>
 </ul>
 <h1 id="2-重要概念"><a href="#2-重要概念" class="headerlink" title="2. 重要概念"></a>2. 重要概念</h1><h2 id="观测（Observation）"><a href="#观测（Observation）" class="headerlink" title="观测（Observation）"></a>观测（Observation）</h2><p>观测（Observation）是指观测到或能感知到的所有参数的集合，如通过摄像头采集的图像，通过传感器获取的各种信号，Ot表示t时刻的观测结果。对于空调的控制，观测数据可以是环温、制冷（热）量、COP、室内温度、设定温度、水流量、电费等。</p>
 <h2 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h2><h2 id="状态（state）"><a href="#状态（state）" class="headerlink" title="状态（state）"></a>状态（state）</h2><p>State分为环境State，智能体State和信息State：</p>
@@ -187,7 +189,7 @@
 </li>
 <li><p>智能体State是我们强化学习算法需要的状态</p>
 </li>
-<li><p>他可以是history的任何函数：<code>Sat = f (Ht)</code></p>
+<li><p>他可以是history的任何函数：<code> Sat = f (Ht)</code></p>
 </li>
 </ul>
 </li>
@@ -205,7 +207,7 @@
 </li>
 </ul>
 <h2 id="奖励（reward）："><a href="#奖励（reward）：" class="headerlink" title="奖励（reward）："></a><strong>奖励</strong>（reward）：</h2><p>标量。用于反映agent在t时刻的表现。根据奖励假设，深度学习问题都可以变为最大化累积奖励的问题。奖励可能且通常是延迟的。</p>
-<h2 id="个体和环境（agent-amp-environment）："><a href="#个体和环境（agent-amp-environment）：" class="headerlink" title="个体和环境（agent &amp; environment）："></a><strong>个体和环境</strong>（agent &amp; environment）：</h2><p>agent是算法和环境交换信息的接口。agent从环境接收observation和reward，并且向环境输出action。而环境则接受action，给出observation和reward。</p>
+<h2 id="个体和环境（agent-amp-environment）："><a href="#个体和环境（agent-amp-environment）：" class="headerlink" title="个体和环境（agent & environment）："></a><strong>个体和环境</strong>（agent &amp; environment）：</h2><p>agent是算法和环境交换信息的接口。agent从环境接收observation和reward，并且向环境输出action。而环境则接受action，给出observation和reward。</p>
 <ul>
 <li><strong>完全可观测的环境</strong>（fully observable environment）：个体能够直接观测到环境状态。在这种条件下，个题对环境的观测=个体状态=环境状态。这种问题是一个MDP问题。</li>
 <li><strong>部分可间接观测的环境</strong>（partially observable environment）：个体间接观测环境。在这种条件下，个体状态≠环境状态，个体必须构建他自己的状态呈现形式。例如：beliefs of environment state、recurrent neural network(RNN)</li>
