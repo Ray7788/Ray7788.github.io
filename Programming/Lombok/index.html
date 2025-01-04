@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Lombok - Ray</title>
+  
+    <link rel="shortcut icon" href="/source/personal/rui.jpg">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Lombok - Ray" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/Programming/Lombok/index.html" />
+  
+  <meta property="og:image" content="/img/lombok-cover.webp" />
+  
+  <meta property="og:article:published_time" content="2025-01-04T05:18:29.336Z" />
+  
+  <meta property="og:article:author" content="Rui Xu" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Ray</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/Ray7788" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/Programming/">Programming</a>
+        
+        </div>
+        
+
+        
+
+        <h1 class="title">Lombok</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Lombok-简介"><a href="#Lombok-简介" class="headerlink" title="Lombok 简介"></a>Lombok 简介</h1><p>那么，Lombok究竟是什么呢？Lombok 是一个工具，它通过简单的注解形式帮助我们简化和消除一些繁琐但又必须存在的 Java 代码。简单来说，比如我们新建了一个类，并添加了一些字段，通常我们需要手动编写 getter 和 setter 方法、构造函数等。而 Lombok 的作用正是为了省去手动编写这些代码的麻烦，它能够在源码编译时自动为我们生成这些方法。</p>
+<p>Lombok 的神奇之处在于，它让我们在源码中无需编写这些通用方法，但在生成的字节码文件中，这些方法却会被自动添加，从而极大提高了开发效率。</p>
+<h1 id="Lombck相关注解功能介绍"><a href="#Lombck相关注解功能介绍" class="headerlink" title="Lombck相关注解功能介绍"></a>Lombck相关注解功能介绍</h1><h4 id="1-Getter-和-Setter"><a href="#1-Getter-和-Setter" class="headerlink" title="1. @Getter 和 @Setter"></a>1. @Getter 和 @Setter</h4><ul>
+<li><strong>功能</strong>：自动生成类中字段的getter和setter方法。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>如果字段需要暴露访问方法，而无需手动编写这些方法。</li>
+<li>可以通过<code>@Setter</code>的<code>AccessLevel</code>属性限制setter方法的可见性（如<code>private</code>）。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：减少冗余代码，增强代码可读性。</li>
+</ul>
+<h4 id="2-NoArgsConstructor-AllArgsConstructor-RequiredArgsConstructor"><a href="#2-NoArgsConstructor-AllArgsConstructor-RequiredArgsConstructor" class="headerlink" title="2. @NoArgsConstructor, @AllArgsConstructor, @RequiredArgsConstructor"></a>2. @NoArgsConstructor, @AllArgsConstructor, @RequiredArgsConstructor</h4><ul>
+<li><strong>功能</strong>：<ul>
+<li><code>@NoArgsConstructor</code>：生成无参构造方法，可设置<code>force</code>为<code>true</code>以绕过<code>final</code>字段初始化。</li>
+<li><code>@AllArgsConstructor</code>：生成包含所有字段的构造方法。</li>
+<li><code>@RequiredArgsConstructor</code>：生成仅包含<code>final</code>字段和带<code>@NonNull</code>注解字段的构造方法。</li>
+</ul>
+</li>
+<li><strong>使用场景</strong>：<ul>
+<li>自动生成构造器，特别适用于DTO类、实体类。</li>
+<li>结合Spring等框架时，方便依赖注入。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-ToString"><a href="#3-ToString" class="headerlink" title="3. @ToString"></a>3. @ToString</h4><ul>
+<li><strong>功能</strong>：生成类的<code>toString</code>方法，便于调试和日志记录。</li>
+<li><strong>属性</strong>：<ul>
+<li><code>includeFieldNames</code>：是否包含字段名称。</li>
+<li><code>exclude</code>：排除不希望包含在<code>toString</code>中的字段。</li>
+<li><code>callSuper</code>：是否调用父类的<code>toString</code>方法。</li>
+</ul>
+</li>
+<li><strong>使用场景</strong>：<ul>
+<li>需要快速实现<code>toString</code>方法且包含必要字段的信息。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-Data"><a href="#4-Data" class="headerlink" title="4. @Data"></a>4. @Data</h4><ul>
+<li><strong>功能</strong>：集合了<code>@Getter</code>、<code>@Setter</code>、<code>@ToString</code>、<code>@EqualsAndHashCode</code>、<code>@RequiredArgsConstructor</code>等常用注解。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>适合需要快速实现POJO类（包括实体类或DTO）的场景。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：默认生成的<code>equals</code>和<code>hashCode</code>方法以类的字段为比较标准。</li>
+</ul>
+<h4 id="5-Builder"><a href="#5-Builder" class="headerlink" title="5. @Builder"></a>5. @Builder</h4><ul>
+<li><strong>功能</strong>：为类生成Builder模式的实现，便于链式调用构造对象。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>构造复杂对象时，例如需要多个字段或配置项。</li>
+<li>增强代码可读性。</li>
+</ul>
+</li>
+<li><strong>特性</strong>：<ul>
+<li>可与构造器注解结合使用。</li>
+<li>支持链式调用。</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-Slf4j"><a href="#6-Slf4j" class="headerlink" title="6. @Slf4j"></a>6. @Slf4j</h4><ul>
+<li><strong>功能</strong>：为类生成<code>org.slf4j.Logger</code>实例。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>需要日志记录功能的场景。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：无需手动声明和初始化<code>Logger</code>对象。</li>
+</ul>
+<h4 id="7-SneakyThrows"><a href="#7-SneakyThrows" class="headerlink" title="7. @SneakyThrows"></a>7. @SneakyThrows</h4><ul>
+<li><strong>功能</strong>：自动抛出受检异常，无需显式声明<code>throws</code>。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>希望简化异常处理代码。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：可能隐藏异常处理逻辑，需谨慎使用。</li>
+</ul>
+<h4 id="8-Value"><a href="#8-Value" class="headerlink" title="8. @Value"></a>8. @Value</h4><ul>
+<li><strong>功能</strong>：用于创建不可变对象，相当于<code>@Data</code>的不可变版本。</li>
+<li><strong>特点</strong>：<ul>
+<li>所有字段默认为<code>final</code>。</li>
+<li>没有<code>setter</code>方法。</li>
+</ul>
+</li>
+<li><strong>使用场景</strong>：<ul>
+<li>适合设计值对象（Value Object）时，例如枚举或常量类。</li>
+</ul>
+</li>
+</ul>
+<h4 id="9-Accessor"><a href="#9-Accessor" class="headerlink" title="9. @Accessor"></a>9. @Accessor</h4><ul>
+<li><strong>功能</strong>：定制getter和setter方法的命名规则。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>需要自定义访问器方法名，例如遵循特定规范时。</li>
+</ul>
+</li>
+</ul>
+<h4 id="10-Cleanup"><a href="#10-Cleanup" class="headerlink" title="10. @Cleanup"></a>10. @Cleanup</h4><ul>
+<li><strong>功能</strong>：为资源的自动释放提供支持，生成<code>try-finally</code>语句。</li>
+<li><strong>使用场景</strong>：<ul>
+<li>需要管理资源释放的场景，如文件操作、数据库连接。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="Lombok-原理详解"><a href="#Lombok-原理详解" class="headerlink" title="Lombok 原理详解"></a>Lombok 原理详解</h1><p>它的核心原理是基于 <strong>编译期注解处理器</strong>（JSR 269）在代码编译时动态修改抽象语法树（AST）。Lombok 的注解处理器会扫描源代码中的注解，根据注解生成对应的代码，并将生成的代码插入到抽象语法树中。在 Java 编译过程中，源代码会被逐步转换为可执行的字节码文件（<code>.class</code>）。下面是具体的步骤：</p>
+<h3 id="编译流程的五个主要步骤"><a href="#编译流程的五个主要步骤" class="headerlink" title="编译流程的五个主要步骤"></a>编译流程的五个主要步骤</h3><ol>
+<li><p><strong>解析源代码</strong>：</p>
+<ul>
+<li>Javac（Java 编译器）会对源代码文件（<code>.java</code>）进行词法和语法解析，生成一棵 <strong>抽象语法树（AST）</strong>。</li>
+<li>AST 是源代码的树形表示形式，其中包含类、方法、变量等信息。</li>
+</ul>
+</li>
+<li><p><strong>注解处理器的执行</strong>：</p>
+<ul>
+<li>编译器调用 <strong>JSR 269</strong> 定义的注解处理器，扫描代码中的注解并对 AST 进行分析和修改。</li>
+<li>处理器可以生成新代码或修改现有的语法树。</li>
+</ul>
+</li>
+<li><p><strong>语义分析和类型检查</strong>：</p>
+<ul>
+<li>检查代码的类型、作用域是否正确。</li>
+<li>例如，是否调用了未定义的方法，变量的类型是否匹配等。</li>
+</ul>
+</li>
+<li><p><strong>优化与中间代码生成</strong>：</p>
+<ul>
+<li>将 AST 转换为中间表示，并进行代码优化。</li>
+</ul>
+</li>
+<li><p><strong>生成字节码文件</strong>：</p>
+<ul>
+<li>最终，Javac 根据修改后的 AST 生成 <code>.class</code> 字节码文件，供 JVM 执行。</li>
+</ul>
+</li>
+</ol>
+<h3 id="编译过程可视化"><a href="#编译过程可视化" class="headerlink" title="编译过程可视化"></a>编译过程可视化</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PersonDTO.java</span><br><span class="line">       ↓</span><br><span class="line">源文件解析并生成 AST 树</span><br><span class="line">       ↓</span><br><span class="line">注解处理器（JSR 269）：修改 AST</span><br><span class="line">       ↓</span><br><span class="line">语义分析和类型检查</span><br><span class="line">       ↓</span><br><span class="line">字节码生成</span><br><span class="line">       ↓</span><br><span class="line">PersonDTO.class</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-Data注解和手动编写代码实现Getter方法性能差别大吗"><a href="#使用-Data注解和手动编写代码实现Getter方法性能差别大吗" class="headerlink" title="使用@Data注解和手动编写代码实现Getter方法性能差别大吗?"></a>使用@Data注解和手动编写代码实现Getter方法性能差别大吗?</h2><p>在使用@Data注解和手动编写getter方法之间，性能上的差别实际上非常小甚至可以忽略不计。</p>
+<p>编译时处理：</p>
+<p>Lombok的@Data注解是在编译时通过注解处理器生成实际的字节码。当我们查看编译后的.class文件时，无论是使用Lombok还是手动编写，生成的字节码几乎是一样的。</p>
+<p>运行时效率：</p>
+<p>因为最终生成的字节码相同，运行时的性能是相同的。JVM执行的是字节码，因此无论是手动编写还是使用Lombok生成的方法，执行效率没有区别。</p>
+
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by Rui Xu, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Java/" class="tag">#Java</a>
+        </p>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/RL-Theory/RL2-Markov/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">强化学习2:MDP Reinforcement Learning2 Markov Decision Process</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/Ray7788" class="item">GitHub</a>
+                
+                <a href="ray778@foxmail.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2025 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        <br>
+        <span class="footer-extra-description">永远相信美好的事情即将发生。Always believe something great is going to happen.</span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
