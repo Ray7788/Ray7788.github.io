@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>后端用户信息接口脱敏方案 - Ray</title>
+  
+    <link rel="shortcut icon" href="/source/personal/rui.jpg">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="后端用户信息接口脱敏方案 - Ray" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/Programming/BackendDesensitization/index.html" />
+  
+  <meta property="og:image" content="/img/mosaic.webp" />
+  
+  <meta property="og:article:published_time" content="2025-03-23T08:38:09.766Z" />
+  
+  <meta property="og:article:author" content="Rui Xu" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Ray</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/Ray7788" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/Programming/">Programming</a>
+        
+        </div>
+        
+
+        
+
+        <h1 class="title">后端用户信息接口脱敏方案</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="浅谈Java后端用户信息接口脱敏"><a href="#浅谈Java后端用户信息接口脱敏" class="headerlink" title="浅谈Java后端用户信息接口脱敏"></a>浅谈Java后端用户信息接口脱敏</h1><p>在开发中，接口往往会返回用户的敏感信息，比如手机号、身份证号、邮箱等。为了保护用户隐私、降低安全风险、并满足法律合规要求，我们需要对这些数据进行<strong>脱敏处理</strong>。</p>
+<p>本文基于 Spring Boot 和 Jackson 提供一种灵活的注解式脱敏方案，并结合 Hutool 工具类 <code>DesensitizedUtil</code> 做扩展与优化。</p>
+<span id="more"></span>
+
+<h2 id="什么是接口数据脱敏？"><a href="#什么是接口数据脱敏？" class="headerlink" title="什么是接口数据脱敏？"></a>什么是接口数据脱敏？</h2><p>接口数据脱敏，是指在对外提供 API 时，对返回数据中的敏感信息进行隐藏或模糊处理，常见包括：</p>
+<ul>
+<li>手机号 <code>13812345678</code> ➜ <code>138****5678</code></li>
+<li>身份证号 <code>123456789012345678</code> ➜ <code>1234******5678</code></li>
+<li>邮箱 <code>example@example.com</code> ➜ <code>exa****@example.com</code></li>
+</ul>
+<h3 id="为什么要做脱敏？"><a href="#为什么要做脱敏？" class="headerlink" title="为什么要做脱敏？"></a>为什么要做脱敏？</h3><ul>
+<li>✅ <strong>保护用户隐私</strong>：避免敏感信息泄露</li>
+<li>✅ <strong>满足合规要求</strong>：符合《个人信息保护法》等法规</li>
+<li>✅ <strong>降低安全风险</strong>：防止数据被非法利用</li>
+</ul>
+<hr>
+<h2 id="项目环境"><a href="#项目环境" class="headerlink" title="项目环境"></a>项目环境</h2><ul>
+<li><strong>IDE</strong>：IntelliJ IDEA  </li>
+<li><strong>JDK</strong>：1.8+  </li>
+<li><strong>Spring Boot</strong>：2.5.4</li>
+</ul>
+<p><strong>Maven 依赖</strong>：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="🛠-实现步骤"><a href="#🛠-实现步骤" class="headerlink" title="🛠 实现步骤"></a>🛠 实现步骤</h2><h3 id="1-定义注解-Sensitive"><a href="#1-定义注解-Sensitive" class="headerlink" title="1. 定义注解 @Sensitive"></a>1. 定义注解 <code>@Sensitive</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.FIELD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Sensitive {</span><br><span class="line">    SensitiveType <span class="title function_">type</span><span class="params">()</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-定义脱敏类型枚举"><a href="#2-定义脱敏类型枚举" class="headerlink" title="2. 定义脱敏类型枚举"></a>2. 定义脱敏类型枚举</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">SensitiveType</span> {</span><br><span class="line">    MOBILE,</span><br><span class="line">    ID_CARD,</span><br><span class="line">    EMAIL</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-自定义序列化器-SensitiveSerializer"><a href="#3-自定义序列化器-SensitiveSerializer" class="headerlink" title="3. 自定义序列化器 SensitiveSerializer"></a>3. 自定义序列化器 <code>SensitiveSerializer</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SensitiveSerializer</span> <span class="keyword">extends</span> <span class="title class_">JsonSerializer</span>&lt;String&gt; {</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> SensitiveType type;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">SensitiveSerializer</span><span class="params">(SensitiveType type)</span> {</span><br><span class="line">        <span class="built_in">this</span>.type = type;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">serialize</span><span class="params">(String value, JsonGenerator gen, SerializerProvider serializers)</span> <span class="keyword">throws</span> IOException {</span><br><span class="line">        <span class="keyword">switch</span> (type) {</span><br><span class="line">            <span class="keyword">case</span> MOBILE:</span><br><span class="line">                gen.writeString(value.replaceAll(<span class="string">"(\\d{3})\\d{4}(\\d{4})"</span>, <span class="string">"$1****$2"</span>));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> ID_CARD:</span><br><span class="line">                gen.writeString(value.replaceAll(<span class="string">"(\\d{4})\\d{10}(\\w{4})"</span>, <span class="string">"$1******$2"</span>));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> EMAIL:</span><br><span class="line">                gen.writeString(value.replaceAll(<span class="string">"(^[^@]{3})[^@]*(@.*$)"</span>, <span class="string">"$1****$2"</span>));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                gen.writeString(value);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实战测试"><a href="#实战测试" class="headerlink" title="实战测试"></a>实战测试</h2><h3 id="User-类"><a href="#User-类" class="headerlink" title="User 类"></a>User 类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> {</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Sensitive(type = SensitiveType.MOBILE)</span></span><br><span class="line">    <span class="meta">@JsonSerialize(using = SensitiveSerializer.class)</span></span><br><span class="line">    <span class="keyword">private</span> String mobile;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Sensitive(type = SensitiveType.ID_CARD)</span></span><br><span class="line">    <span class="meta">@JsonSerialize(using = SensitiveSerializer.class)</span></span><br><span class="line">    <span class="keyword">private</span> String idCard;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Sensitive(type = SensitiveType.EMAIL)</span></span><br><span class="line">    <span class="meta">@JsonSerialize(using = SensitiveSerializer.class)</span></span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="Controller-实战"><a href="#Controller-实战" class="headerlink" title="Controller 实战"></a>Controller 实战</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> {</span><br><span class="line">    <span class="meta">@GetMapping("/user")</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">getUser</span><span class="params">()</span> {</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setName(<span class="string">"张三"</span>);</span><br><span class="line">        user.setMobile(<span class="string">"13812345678"</span>);</span><br><span class="line">        user.setIdCard(<span class="string">"123456789012345678"</span>);</span><br><span class="line">        user.setEmail(<span class="string">"example@example.com"</span>);</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="接口输出结果"><a href="#接口输出结果" class="headerlink" title="接口输出结果"></a>接口输出结果</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"张三"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"mobile"</span><span class="punctuation">:</span> <span class="string">"138****5678"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"idCard"</span><span class="punctuation">:</span> <span class="string">"1234******5678"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"email"</span><span class="punctuation">:</span> <span class="string">"exa****@example.com"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="扩展思路：结合-Hutool-的-DesensitizedUtil-使用"><a href="#扩展思路：结合-Hutool-的-DesensitizedUtil-使用" class="headerlink" title="扩展思路：结合 Hutool 的 DesensitizedUtil 使用"></a>扩展思路：结合 Hutool 的 DesensitizedUtil 使用</h2><p><a target="_blank" rel="noopener" href="https://hutool.cn/">Hutool</a> 是一个非常实用的 Java 工具类库，其中 <code>cn.hutool.core.util.DesensitizedUtil</code> 提供了多种类型的脱敏方法，支持手机号、身份证号、邮箱、地址、银行卡号等。</p>
+<h3 id="示例用法"><a href="#示例用法" class="headerlink" title="示例用法"></a>示例用法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DesensitizedUtil.mobilePhone(<span class="string">"13812345678"</span>) </span><br><span class="line"><span class="comment">// 输出：138****5678</span></span><br><span class="line"></span><br><span class="line">DesensitizedUtil.idCardNum(<span class="string">"123456789012345678"</span>, <span class="number">4</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment">// 输出：1234********5678</span></span><br><span class="line"></span><br><span class="line">DesensitizedUtil.email(<span class="string">"example@example.com"</span>)</span><br><span class="line"><span class="comment">// 输出：e****@example.com</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="结合使用"><a href="#结合使用" class="headerlink" title="结合使用"></a>结合使用</h3><p>可以在 <code>SensitiveSerializer</code> 中调用 Hutool 提供的方法，替代正则逻辑，代码更简洁、可读性更高：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">serialize</span><span class="params">(String value, JsonGenerator gen, SerializerProvider serializers)</span> <span class="keyword">throws</span> IOException {</span><br><span class="line">    String desensitized;</span><br><span class="line">    <span class="keyword">switch</span> (type) {</span><br><span class="line">        <span class="keyword">case</span> MOBILE:</span><br><span class="line">            desensitized = DesensitizedUtil.mobilePhone(value);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ID_CARD:</span><br><span class="line">            desensitized = DesensitizedUtil.idCardNum(value, <span class="number">4</span>, <span class="number">4</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> EMAIL:</span><br><span class="line">            desensitized = DesensitizedUtil.email(value);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            desensitized = value;</span><br><span class="line">    }</span><br><span class="line">    gen.writeString(desensitized);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+
+
+<p>💡 <em>Tips：生产环境可结合 AOP、全局 ObjectMapper 或 ResponseBodyAdvice 进一步封装为全局脱敏处理策略。</em></p>
+
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by Rui Xu, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Java/" class="tag">#Java</a>
+        </p>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/Programming/ConCurrency2/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Java多线程编程1-Semaphore</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/Ray7788" class="item">GitHub</a>
+                
+                <a href="ray778@foxmail.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2025 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        <br>
+        <span class="footer-extra-description">永远相信美好的事情即将发生。Always believe something great is going to happen.</span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
