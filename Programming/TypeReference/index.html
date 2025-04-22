@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>复杂泛型的工具类 -- Fastjson TypeReference - Ray</title>
+  
+    <link rel="shortcut icon" href="/source/personal/rui.jpg">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="复杂泛型的工具类 -- Fastjson TypeReference - Ray" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/Programming/TypeReference/index.html" />
+  
+  <meta property="og:image" content="/img/TypeReference.jpg" />
+  
+  <meta property="og:article:published_time" content="2025-04-21T09:49:04.646Z" />
+  
+  <meta property="og:article:author" content="Rui Xu" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Ray</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/Ray7788" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/Programming/">Programming</a>
+        
+        </div>
+        
+
+        
+
+        <h1 class="title">复杂泛型的工具类 -- Fastjson TypeReference</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>在Java中，泛型的使用非常广泛，但是在某些情况下，我们需要处理复杂的泛型类型，比如嵌套的泛型、带有通配符的泛型等。为了方便处理这些复杂的泛型类型，Fastjson提供了一个名为<code>TypeReference</code>的工具类。<br><code>TypeReference</code>类可以帮助我们在序列化和反序列化时，准确地指定复杂的泛型类型。它的主要作用是提供一个类型引用，以便在运行时获取泛型的实际类型信息。</p>
+<h1 id="1-TypeReference的使用"><a href="#1-TypeReference的使用" class="headerlink" title="1. TypeReference的使用"></a>1. TypeReference的使用</h1><p><code>TypeReference</code>类的使用非常简单，只需要继承它，并实现一个匿名内部类，然后在构造函数中指定泛型类型即可。</p>
+<h2 id="1-1-使用TypeReference反序列化"><a href="#1-1-使用TypeReference反序列化" class="headerlink" title="1.1 使用TypeReference反序列化"></a>1.1 使用TypeReference反序列化</h2><p>先来定义一个Result类,也是一个泛型类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Result</span>&lt;T&gt; {</span><br><span class="line">	<span class="keyword">private</span> <span class="type">long</span> code;</span><br><span class="line">	<span class="keyword">private</span> T data;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getCode</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setCode</span><span class="params">(<span class="type">long</span> code)</span> {</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">public</span> T <span class="title function_">getData</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setData</span><span class="params">(T data)</span> {</span><br><span class="line">        <span class="built_in">this</span>.data = data;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 也可以使用Lombok</span></span><br><span class="line">    <span class="comment">// @Data</span></span><br><span class="line">    <span class="comment">// @AllArgsConstructor</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>再定义一个People类,以及它的get和set方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">People</span> {</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>接下来实例化<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.TypeReference;</span><br><span class="line"></span><br><span class="line">Result&lt;List&lt;People&gt;&gt; result = <span class="keyword">new</span> <span class="title class_">Result</span>&lt;&gt;();</span><br><span class="line">List&lt;People&gt; peopleList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置Data</span></span><br><span class="line"><span class="type">People</span> <span class="variable">xiaoHong</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">xiaoHong.setName(<span class="string">"小红"</span>);</span><br><span class="line"><span class="type">People</span> <span class="variable">xiaoMing</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">xiaoMing.setName(<span class="string">"小明"</span>);</span><br><span class="line">peopleList.add(xiaoHong);</span><br><span class="line">peopleList.add(xiaoMing);</span><br><span class="line">result.setData(peopleList);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置code</span></span><br><span class="line">result.setCode(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将对象转换为JSON字符串: 使用Fastjson的TypeReference</span></span><br><span class="line">TypeReference&lt;Result&lt;List&lt;People&gt;&gt;&gt; typeReference = <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;Result&lt;List&lt;People&gt;&gt;&gt;() {};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将对象转换为JSON字符串</span></span><br><span class="line"><span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> JSON.toJSONString(result);</span><br></pre></td></tr></table></figure></p>
+<p>输出对应的JSON字符串:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"code"</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"data"</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">{</span> <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"小红"</span> <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">{</span> <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"小明"</span> <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></table></figure></p>
+<p>接下来使用TypeReference反序列化<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.type.TypeReference;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">jsonStr</span> <span class="operator">=</span>  <span class="string">"{\"code\":0,\"data\":[{\"name\":\"小红\"},{\"name\":\"小明\"}]}"</span>;</span><br><span class="line"></span><br><span class="line">TypeReference&lt;Result&lt;List&lt;People&gt;&gt;&gt; typeReference = <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;Result&lt;List&lt;People&gt;&gt;&gt;() {};</span><br><span class="line"></span><br><span class="line"><span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line"><span class="comment">// 反序列化: 将JSON字符串转换为Result对象</span></span><br><span class="line">Result&lt;List&lt;People&gt;&gt; listResult = objectMapper.readValue(jsonStr, typeReference);</span><br><span class="line">System.out.println(<span class="string">"Code: "</span> + listResult.getCode());</span><br><span class="line">System.out.println(<span class="string">"Data: "</span> + listResult.getData());</span><br></pre></td></tr></table></figure></p>
+<p>得到的输出结果:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Code: 0</span><br><span class="line">Data: [{name=小红}, {name=小明}]</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-2-根据泛型动态构造TypeReference"><a href="#1-2-根据泛型动态构造TypeReference" class="headerlink" title="1.2 根据泛型动态构造TypeReference"></a>1.2 根据泛型动态构造TypeReference</h2><p>假设我们提供了一个http客户端工具，它的定义是这样的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HttpClient</span> {</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">execute</span><span class="params">(String url, Map&lt;String,Object&gt; params)</span> {</span><br><span class="line">        <span class="comment">// 这里是模拟获取json字符串</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"{\"code\":0,\"data\":[{\"name\":\"小红\"},{\"name\":\"小明\"}]}"</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> &lt;T&gt; T <span class="title function_">get</span><span class="params">(String url, Map&lt;String,Object&gt; params, TypeReference&lt;T&gt; typeR)</span> {</span><br><span class="line">		<span class="type">String</span> <span class="variable">jsonStr</span> <span class="operator">=</span> execute(url, params); 		<span class="comment">// 获取jsonStr, 假设这里获取到的是前面的结果</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 解析为枚举类型，下面会讲解如何实现</span></span><br><span class="line">        <span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">        <span class="comment">//在此处偷梁换柱（所谓的动态构造其实就一句话）</span></span><br><span class="line">        TypeReference&lt;Result&lt;T&gt;&gt; resultType = <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;Result&lt;T&gt;&gt;() {</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Type <span class="title function_">getType</span><span class="params">()</span> {</span><br><span class="line">            	<span class="comment">//在外层再包一层Result，就是所谓的动态构造</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ParameterizedTypeImpl</span>(<span class="keyword">new</span> <span class="title class_">Type</span>[]{typeR.getType()},<span class="literal">null</span>, Result.class);   <span class="comment">// 这里的Result是外层的泛型</span></span><br><span class="line">            }</span><br><span class="line">        };</span><br><span class="line"></span><br><span class="line">        Result&lt;T&gt; listResult = objectMapper.readValue(jsonStr, resultType);</span><br><span class="line">        <span class="comment">// 异常判断</span></span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="keyword">if</span> (listResult.getCode() != <span class="number">0</span>) {</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">"请求失败"</span>);</span><br><span class="line">            }</span><br><span class="line">        } <span class="keyword">catch</span> (Exception e) {</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回数据, 这里的listResult.getData()是List&lt;People&gt;类型</span></span><br><span class="line">		<span class="keyword">return</span> listResult.getData();</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>调用样例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpClient</span>();</span><br><span class="line"><span class="comment">//注意这里的TypeReference的泛型, 不是TypeReference&lt;Result&lt;List&lt;People&gt;&gt;&gt;, 没有Result</span></span><br><span class="line">List&lt;People&gt; result = client.get(<span class="string">"http://xxxx"</span>, params, <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;People&gt;&gt;());</span><br></pre></td></tr></table></figure></p>
+<h1 id="2-TypeReference的实现原理"><a href="#2-TypeReference的实现原理" class="headerlink" title="2. TypeReference的实现原理"></a>2. TypeReference的实现原理</h1><p><code>TypeReference</code>类的实现原理主要是通过Java的反射机制来获取泛型的实际类型信息。它使用了一个抽象类<code>ParameterizedTypeImpl</code>，该类实现了<code>ParameterizedType</code>接口，并重写了<code>getActualTypeArguments()</code>方法，以返回实际的泛型参数类型。</p>
+<p>ParameterizedType是一个记录类型泛型的接口, 继承自Type, 一共三方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ParameterizedType</span> <span class="keyword">extends</span> <span class="title class_">Type</span> {</span><br><span class="line"></span><br><span class="line">Type[] getActualTypeArguments(); <span class="comment">// 返回泛型类型数组</span></span><br><span class="line">Type <span class="title function_">getRawType</span><span class="params">()</span>; <span class="comment">// 返回原始类型Type</span></span><br><span class="line">Type <span class="title function_">getOwnerType</span><span class="params">()</span>; <span class="comment">// 返回 Type 对象，表示此类型是其成员之一的类型。</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.ParameterizedType;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.WildcardType;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ParameterizedTypeImpl</span> <span class="keyword">implements</span> <span class="title class_">ParameterizedType</span> {</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Type[] actualTypeArguments;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Type rawType;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Type ownerType;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ParameterizedTypeImpl</span><span class="params">(Type[] actualTypeArguments, Type rawType, Type ownerType)</span> {</span><br><span class="line">        <span class="built_in">this</span>.actualTypeArguments = actualTypeArguments;</span><br><span class="line">        <span class="built_in">this</span>.rawType = rawType;</span><br><span class="line">        <span class="built_in">this</span>.ownerType = ownerType;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Type[] getActualTypeArguments() {</span><br><span class="line">        <span class="keyword">return</span> actualTypeArguments;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Type <span class="title function_">getRawType</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> rawType;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Type <span class="title function_">getOwnerType</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> ownerType;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43002640/article/details/129587808?fromshare=blogdetail&amp;sharetype=blogdetail&amp;sharerId=129587808&amp;sharerefer=PC&amp;sharesource=Ray778&amp;sharefrom=from_link">https://blog.csdn.net/weixin_43002640/article/details/129587808?fromshare=blogdetail&amp;sharetype=blogdetail&amp;sharerId=129587808&amp;sharerefer=PC&amp;sharesource=Ray778&amp;sharefrom=from_link</a> </p>
+
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by Rui Xu, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Java/" class="tag">#Java</a>
+        </p>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/Programming/BackendDesensitization/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">后端用户信息接口脱敏方案</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/Ray7788" class="item">GitHub</a>
+                
+                <a href="ray778@foxmail.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2025 Rui Xu<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        <br>
+        <span class="footer-extra-description">永远相信美好的事情即将发生。Always believe something great is going to happen.</span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
