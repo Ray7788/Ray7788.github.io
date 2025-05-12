@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>后端用户信息接口脱敏方案(二) 自定义注解+jackson序列化</title>
+      <link href="/Programming/BackendDesensitization2/"/>
+      <url>/Programming/BackendDesensitization2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="浅谈Java后端用户信息接口脱敏"><a href="#浅谈Java后端用户信息接口脱敏" class="headerlink" title="浅谈Java后端用户信息接口脱敏"></a>浅谈Java后端用户信息接口脱敏</h1><p>在开发中，接口往往会返回用户的敏感信息，比如手机号、身份证号、邮箱等。为了保护用户隐私、降低安全风险、并满足法律合规要求，我们需要对这些数据进行<strong>脱敏处理</strong>。<br>本文基于 Spring Boot 和 Jackson 提供一种灵活的注解式脱敏方案，并结合 Hutool 工具类 <code>DesensitizedUtil</code> 做扩展与优化。</p><h1 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h1><p>分为两个步骤:</p><h2 id="1-自定义Serializer"><a href="#1-自定义Serializer" class="headerlink" title="1. 自定义Serializer"></a>1. 自定义Serializer</h2><p>自定义jackson序列化器，需要集成JsonSerializer，重写serialize方法实现脱敏逻辑</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.example.demo.utils.DesensitizedUtil;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonGenerator;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonSerializer;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.SerializerProvider;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PhoneDesensitizationSerializer</span> <span class="keyword">extends</span> <span class="title class_">JsonSerializer</span>&lt;String&gt; {</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">serialize</span><span class="params">(String value, JsonGenerator gen, SerializerProvider serializers)</span> <span class="keyword">throws</span> IOException {</span><br><span class="line">        <span class="comment">// 使用Hutool工具类进行脱敏处理</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">desensitizedValue</span> <span class="operator">=</span> DesensitizedUtil.desensitized(value);</span><br><span class="line">        <span class="comment">// 将脱敏后的值写入JSON</span></span><br><span class="line">        gen.writeString(desensitizedValue);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure><h2 id="2-简单调用"><a href="#2-简单调用" class="headerlink" title="2. 简单调用"></a>2. 简单调用</h2><p>在需要被脱敏的字段上使用@JsonSerialize注解，并使用自定义的序列化器, 比如手机号脱敏:</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.annotation.JsonSerialize;</span><br><span class="line"><span class="keyword">import</span> com.nageoffer.shortlink.admin.common.serialize.PhoneDesensitizationSerializer;</span><br><span class="line"></span><br><span class="line"><span class="meta">@JsonSerialize(using = PhoneDesensitizationSerializer.class)</span></span><br></pre></td></tr></table></figure><h2 id="ToDo"><a href="#ToDo" class="headerlink" title="ToDo"></a>ToDo</h2><p>还有很多待补充<br>可能需要对脱敏和非脱敏分别进行处理，以满足不同业务需求</p><p><a href="https://blog.csdn.net/qq_30166465/article/details/142902145?fromshare=blogdetail&amp;sharetype=blogdetail&amp;sharerId=142902145&amp;sharerefer=PC&amp;sharesource=Ray778&amp;sharefrom=from_link">参考博客文章</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Programming </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>复杂泛型的工具类 -- Fastjson TypeReference</title>
       <link href="/Programming/TypeReference/"/>
       <url>/Programming/TypeReference/</url>
